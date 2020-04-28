@@ -15,7 +15,12 @@ let logger = require('../utils/LoggerService');
 router.post('/register',  (req, res) => {
     logger('info', req.id, __filename, 'INICIO : Creando un nuevo usuario.');
     let user = req.body;
-    
+
+    if(!user.password || !user.login){
+        logger('error', req.id, __filename, 'Not content on body');
+        return res.status(400).json({ code:400 , message : "Bad Request"});
+    }
+
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(user.password, salt);
     
@@ -31,7 +36,7 @@ router.post('/register',  (req, res) => {
 
             const token = jwt.sign(userForToken, process.env.SECRET);
 
-            return res.status(200).send({ token , user: user });
+            return res.status(201).send({ token , user: user });
         })
         .catch(error => {
             logger('error', req.id, __filename, 'Error : ' + error.message);
@@ -103,7 +108,7 @@ router.get('/user/:id', (req, res) => {
             return res.status(200).json(user);
         })
         .catch(error => {
-            return res.status(400).end("Bad Request");
+            return res.status(error.error).end("Bad Request");
         })
 });
 

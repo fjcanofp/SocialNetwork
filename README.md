@@ -13,19 +13,23 @@ Relacionales , APIS ... ).
 
 ## Tecnologias a usar :
 
-Para la parte del desarrollo se usara algun Stack de javascript (MEAN , MERN , MEVN ) e implementando una
-infrastructura de microservicio :
+Para la parte del desarrollo se usara algun Stack de javascript (MEAN , MERN , MEVN ) e implementando una infrastructura de microservicios :
+
+Por la parte de Cliente :
+- React.
+
+Por la parte de lado del Servidor: 
 
 - Node.js y Express
 - MongoDB
 - Mongoose
-- Angular8 , Vue , React .
+
+Por la parte de Diseño de Interfaces :
+
 - CSS
 - Bootstrap
-- SASS ó LESS
-- Typescript
 
-Para la parte del Despliegue :
+Por la parte del Despliegue :
 
 - GIT & GITHUB
 - Dockers

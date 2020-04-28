@@ -37,7 +37,7 @@ exports.searchUser = function (ctx, login, password) {
 exports.signUpUser = function (ctx, user) {
     logger('debug', 'UserModel', ctx, 'Creating a new User');
     return new Promise((resolve, reject) => {
-        delete user._id;
+        //delete user._id;
         user = new userModel(user);
         user.save()
             .then((createdUser) => {
@@ -100,7 +100,7 @@ exports.findUserById = function (ctx, id) {
             })
             .catch(error => {
                 logger('error', 'UserModel', ctx, error);
-                reject();
+                reject({ error : 500 , messages:"Internal Server Error"});
             })
     })
 };

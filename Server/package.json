@@ -29,7 +29,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec > ./test/tests",
+    "test": "./node_modules/.bin/mocha --recursive --reporter spec > ./test/results/result.test",
     "start": "node app.js"
   },
   "author": "",

@@ -1,8 +1,16 @@
 /**
  * Importamos utilidades
  */
-let db = require('./test_utils');
-let { url , authHeader , user } = require('./test_utils');
+let db = require('..');
+let { url , authHeader } = require('../index');
+
+let user = {
+  "_id": "5ea871d77011282504d50000",
+  "name": "sujeto de pruebas",
+  "email": "sujeto@supertest.com",
+  "login": "sujeto@supertest.com",
+  "password": "sujeto@supertest.com",
+}
 
 /* Primero requerimos los paquetes necesarios: */
 let chai = require('chai');
@@ -17,24 +25,15 @@ chai.use(chaiHttp);
  de este grupo de tests */
 describe('Prueba la api rest de usuarios: ', () => {
 
-  before(db.connectDB); // Se ejecuta una vez antes de empezar las test
-  after(db.closeConexionWithDB); // Se ejecuta una vez despues de empezar los test
-
   /**
    * La función it, que es donde vamos a explicar lo que queremos que haga el test.
    */
-  it('[POST /user] Registramos un usuario :', (done) => {
+  it('[POST /register] Registramos un usuario :', (done) => {
 
     /* Definimos la peticion http */
     chai.request(url)
-      .post('/security/register')
-      .set(authHeader) //Colocamos los datos en la cabecera de la peticion
-      .send({
-        name: "test_user",
-        email: "test@supertest.com",
-        login: "test@supertest.com",
-        password: "test@supertest.com"
-      })
+      .post('/register')
+      .send(user)
       .end(function (err, res) {
 
         expect(res).to.have.status(201); // 201 (Created)
@@ -44,9 +43,9 @@ describe('Prueba la api rest de usuarios: ', () => {
 
   }); //end it
 
-  it("[POST /user] Registramos sin nada en el body :", (done) => {
+  it("[POST /register] Registramos sin nada en el body :", (done) => {
     chai.request(url)
-      .post('/security/register')
+      .post('/register')
       .send({})
       .end((error, res) => {
         expect(res).to.have.status(400) // 400 Bad Request
@@ -65,7 +64,7 @@ describe('Prueba la api rest de usuarios: ', () => {
       });
   });
   
-  it("[PUT /USER/:ID ] Modificamos un usuario :", (done) => {
+  it("[PUT /USER/:ID ] Intentamos modificar un usuario distinto al nuestro :", (done) => {
     chai.request(url)
       .put('/user/' + user._id)
       .set(authHeader)
@@ -77,7 +76,7 @@ describe('Prueba la api rest de usuarios: ', () => {
         password: user.password
       })
       .end((error, res) => {
-        expect(res).to.have.status(200) // 200 ok
+        expect(res).to.have.status(401) // 401 Unauthorized
         done();
       })
   })
