@@ -27,17 +27,14 @@ export default function Login() {
     return (
         <div id="logreg-forms">
             <form className="form-signin" onSubmit={handleSubmit} >
-                <h1 className="h3 mb-3 font-weight-normal text-center"> Sign in</h1>
-                <hr/>
-                { error ? (<div className="alert alert-warning" role="alert">Invalid Credentials</div>):(<></>) }
+                { error ? (<div className="alert alert-danger" role="alert">Invalid Credentials</div>):(<></>) }
                 <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required="" autoFocus="" value={user} onChange={(evt) => { setUser(evt.target.value) }} />
                 <br/>
                 <input type="password" id="inputPassword" className="form-control" placeholder="Password" required="" value={password} onChange={(evt) => { setPassword(evt.target.value) }} />
-                <hr/>
-                <button className="btn btn-success btn-block" type="submit"><i className="fas fa-sign-in-alt"></i> Sign in</button>
-                <Link to="/" id="forgot_pswd">Forgot password?</Link>
+                <button id="signIn" className="btn btn-block" type="submit"><i className="fas fa-sign-in-alt"/> Sign in</button>
+                <Link to="/Home" id="forgot_pswd">Forgot password?</Link>
                 <hr />
-                <Link to="/SignUp" className="btn btn-primary btn-block text-light" type="button" id="btn-signup">Sign up New Account</Link>
+                <Link to="/SignUp" className="btn btn-block" type="button" id="signUp">Sign up New Account</Link>
             </form>
         </div>
     )
