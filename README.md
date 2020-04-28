@@ -29,7 +29,7 @@ Por la parte de Diseño de Interfaces :
 - CSS
 - Bootstrap
 
-Para la parte del Despliegue :
+Por la parte del Despliegue :
 
 - GIT & GITHUB
 - Dockers
