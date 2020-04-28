@@ -16,7 +16,7 @@ export default function Login() {
             password: password
         })
         .then(User=>{
-            alert(` Welcome ${User.name}`);
+            alert(` Welcome ${User.login}`);
             history.push("/home");
         })
         .catch(error=>{

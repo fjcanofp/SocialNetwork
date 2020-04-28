@@ -7,7 +7,7 @@ export default function ReactionBar() {
             <div className="col-12">
                 <div type="button" className="btn" data-toggle="collapse" data-target="#collapseExample">
                     comments
-                            </div>
+                </div>
                 <button className="btn"><i className="far fa-thumbs-up"></i></button>
                 <button className="btn"><i className="far fa-thumbs-down"></i></button>
                 <button className="btn"><i className="far fa-star"></i></button>
