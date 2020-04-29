@@ -1,14 +1,23 @@
+@font-face {
+    font-family: HelveticaNeue;
+    src: url("../../Resources/fonts/Helvetica.ttf");
+}
+
 body {
     background-image: url('../../Resources/img/fondo2.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
 }
 
 /* sign in FORM */
 #logreg-forms {
     width: 412px;
-    margin: 10vh auto;
     border: 1px solid gray;
     /* box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);*/
     transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
@@ -98,27 +107,49 @@ body {
     margin: 0 auto;
 }
 
-#signIn {
+#signIn, #register-signUp {
     background-color: darkorange
 }
 
-#signIn:hover {
+#signIn:hover, #register-signUp:hover {
     background-color: black;
     color: white;
 }
 
-#signUp {
+#signUp, #register-btn-signUp {
     background-color: black
 }
 
-#signUp:hover {
+#signUp:hover, #register-btn-signUp:hover {
     background-color: white;
     color: black;
+}
+
+#logo-bask {
+    color: darkorange;
+}
+
+#logo-book {
+    color: white;
+}
+
+#logo {
+    margin: 0 0 0 22%;
+}
+
+#logo-bask, #logo-book {
+    font-family: HelveticaNeue, sans-serif;
+    font-size: 50px;
 }
 
 /* Mobile */
 
 @media screen and (max-width: 500px) {
+    #logo {
+        display: block;
+        margin: 0 0 0 8%;
+    }
+
     #logreg-forms {
         width: 300px;
     }
