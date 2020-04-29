@@ -77,17 +77,23 @@ router.post('/posts', ( req , res )=>{
  */
 router.delete('/posts/:id', ( req , res )=>{
     let id = req.params.id;
+    logger('info',req.id,__filename,"Start: Delete posts by id ")
     postsManager.deletePosts(req.id , id)
     .then(()=>{
-        return res.status(200).json({ code: 200 , message : "Posts has been deleteds"})
+        logger('debug',req.id,__filename,"posts deleted "+id)
+        return res.status(200).json({ code: 200 , message : "Posts has been deleted"})
     })
     .catch( error =>{
+        logger('error',req.id,__filename, error )
         if(error.code = 500){
             return res.status(400).end("Bad Request")
         }
         else{
             return res.status(500).end("Internal server Error")
         }
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: Delete posts by id ")
     })
 });
 
@@ -100,15 +106,15 @@ router.put('/posts/:id', (req ,res )=>{
     let user = req.user;
     let post = req.body;
 
-    if(!user || !post){
-        return res.status(400).end("Bad Request");
-    }
-    
+    logger('info',req.id,__filename,"Start: Modify posts by id ")
+
     if(post._id != id ){
+        logger('warn',req.id,__filename," security url and post id are diferents")
         return res.status(401).end('Unauthorized');
     }
     
     if(user._id != post.user){
+        logger('warn',req.id,__filename," security cannot modify a post of another user")
         return res.status(401).end('Unauthorized');
     }
 
@@ -117,12 +123,16 @@ router.put('/posts/:id', (req ,res )=>{
         return res.status(200).json({ code: 200 , message : "Posts has been modify"})
     })
     .catch( error =>{
+        logger('error',req.id,__filename, error )
         if(error.code = 500){
             return res.status(400).end("Bad Request")
         }
         else{
             return res.status(500).end("Internal server Error")
         }
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: Modify posts by id ")
     })
 });
 

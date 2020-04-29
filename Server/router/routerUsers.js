@@ -83,17 +83,17 @@ router.put('/user/:id', (req, res) => {
  */
 router.delete('/user/:id', (req, res) => {
     logger('info',req.id,__filename,"Start: delete user.");
-    let user = req.body;
+    let user = req.user;
     let id = req.params.id;
 
-    if (user._id != id) {
+    if (user.id != id)  {
         logger('warn',req.id,__filename,"Security validations fail")
         return res.status(400).end("Bad Request")
     }
 
     userManager.deleteUser(id)
         .then(() => {
-            logger('debug',req.id,__filename,"User has been deleted with id"+id)
+            logger('debug',req.id,__filename,"User has been deleted with id "+id)
             return res.status(200).json({ code: 200, message: "User has been deleted" })
         })
         .catch(error => {

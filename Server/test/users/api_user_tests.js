@@ -12,6 +12,9 @@ let user = {
   "password": "sujeto@supertest.com",
 }
 
+let user_token = { 
+  "Authorization": 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InN1amV0b0BzdXBlcnRlc3QuY29tIiwiaWQiOiI1ZWE4NzFkNzcwMTEyODI1MDRkNTAwMDAiLCJpYXQiOjE1ODgxODAyNDd9.aS4vsS4sAIBUICpUijMHcKzO-xbSpjlp8GmwR7GWY9Y'
+}
 /* Primero requerimos los paquetes necesarios: */
 let chai = require('chai');
 let chaiHttp = require('chai-http');
@@ -87,6 +90,16 @@ describe('Prueba la api rest de usuarios: ', () => {
       .set(authHeader)
       .end((error, res) => {
         expect(res).to.have.status(400) // 400 Bad Request
+        done();
+      })
+  })
+
+  it("[DELETE /USER/:ID] Eliminar un usuario :", (done) => {
+    chai.request(url)
+      .delete('/user/' + user._id)
+      .set(user_token)
+      .end((error, res) => {
+        expect(res).to.have.status(200) // 200 ok
         done();
       })
   })

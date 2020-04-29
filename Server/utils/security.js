@@ -43,7 +43,7 @@ exports.interceptorJWT = function(request, response, next){
     })
     .catch(error => {
         logger('info','AUTH', request.id , "Authentication failure" + JSON.stringify(error));        
-        response.statusCode = error.error
+        response.statusCode = error.code
         response.json(error)
     })
 }
