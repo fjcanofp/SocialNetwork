@@ -1,3 +1,17 @@
+.error{
+    background-image: url("../../Resources/img/error.jpg");
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+}
+
 .full-sc{
     height: 100vh;
 }
+
+@media screen and (max-width: 500px){
+    .error{
+        background-image: url("../../Resources/img/login-bg2.jpg");
+    }
+}
+

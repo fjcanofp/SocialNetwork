@@ -31,12 +31,12 @@ export default function Register() {
             <div id="logreg-forms">
                 <form className="form-signin" onSubmit={handleSubmit}>
                     {error ? (<div className="alert alert-danger" role="alert">Registration error</div>) : (<></>)}
-                    <input type="text" id="inputName" className="form-control" placeholder="Name" required=""
+                    <input type="text" id="inputName" className="form-control" placeholder="Name" required
                            autoFocus="" value={name} onChange={(evt) => {
                         setName(evt.target.value)
                     }}/>
                     <br/>
-                    <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required=""
+                    <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required
                            autoFocus="" value={user} onChange={(evt) => {
                         setUser(evt.target.value)
                     }}/>
