@@ -3,23 +3,23 @@ const CommentsModel = require('../entity/CommentsModel').CommentsModel;
 const PostModel = require('../entity/PostsModel').PostsModel;
 const logger = require('../utils/LoggerService');
 
-exports.createNewReactions = function( reactions ){
+exports.createNewReactions = function( ctx , reactions ){
     return new Promise(( resolve , reject )=>{
         if(!reactions){
-            logger('debug','ReactionModel','Create Reaction', 'Bad Request: No reactions on the body found');
+            logger('debug',ctx,__filename, 'Bad Request: No reactions on the body found');
             reject({
                 code : 400 ,
-                message : "Bad Request"
+                messages : "Bad Request"
             });
         }
         new ReactionsModels(reactions)
         .save()
         .then(( reactions )=>{
-            logger('debug','ReactionModel','Create Reaction', 'Reaction has been created with id ' + reactions._id);
+            logger('debug',ctx,__filename, 'Reaction has been created with id ' + reactions._id);
             resolve()
         })
         .catch(( error )=>{
-            logger('error','ReactionModel','Create Reaction', 'ERROR ' + error );
+            logger('error',ctx, __filename, 'ERROR ' + error );
             reject({
                 code : 500, 
                 messages: "Internal Server Error"
@@ -28,39 +28,15 @@ exports.createNewReactions = function( reactions ){
     })
 }
 
-exports.modifyReaction = function( reactions ){
-    return new Promise(( resolve , reject )=>{
-        if(!reactions){
-            logger('debug','ReactionModel','Modify Reaction', 'Bad Request no reactions on body');
-            reject({
-                code : 400 ,
-                message : "Bad Request"
-            });
-        }
-        ReactionsModels.update({_id : reactions._id } , reactions )
-        .then(( reactions )=>{
-            logger('debug','ReactionModel','Modify Reaction', 'Reaction has been Modified with id ' + reactions._id);
-            resolve()
-        })
-        .catch(( error )=>{
-            logger('error','ReactionModel','Modify Reaction', 'ERROR ' + error );
-            reject({
-                code : 500, 
-                messages: "Internal Server Error"
-            })
-        })
-    })
-}
-
-exports.deleteReactions = function( id ){
+exports.deleteReactions = function( ctx ,  id ){
     return new Promise(( resolve , reject )=>{
         ReactionsModels.deleteOne({ _id : id })
         .then(( reactions )=>{
-            logger('debug','ReactionModel','Delete Reaction', 'Reaction has been Deleted with id ' + reactions._id);
+            logger('debug',ctx,__filename, 'Reaction has been Deleted with id ' + reactions._id);
             resolve()
         })
         .catch(( error )=>{
-            logger('error','ReactionModel','Delete Reaction', 'ERROR ' + error );
+            logger('error',ctx,__filename, 'ERROR ' + error );
             reject({
                 code : 500, 
                 messages: "Internal Server Error"
@@ -72,13 +48,16 @@ exports.deleteReactions = function( id ){
 exports.updateCommentsDependenciesAtCreate = function( reaction ){
     CommentsModel.findById( reaction.comments )
             .then( comment =>{
+                logger('debug',ctx,__filename, 'adding reaction to comments' + reaction.comments);
                 comment.reactions.push(reaction._id);
                 CommentsModel.updateOne({ _id : comment._id} , comment)
             })
             .then(()=>{
                 // Modificadas las dependencias
+                logger('debug',ctx,__filename, 'satisfied dependencies');
             })
             .catch( error =>{
+                logger('error',ctx,__filename, 'Error at satisfied dependencies'+error);
             })
 }
 

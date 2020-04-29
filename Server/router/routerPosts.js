@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let security = require('../utils/security');
 let postsManager = require('../managers/Posts');
-
+const logger = require('../utils/LoggerService');
 //====================================//
 //             Posts API              //
 //====================================//
@@ -11,30 +11,37 @@ let postsManager = require('../managers/Posts');
  *  Lists all Posts
  */
 router.get('/posts',(req ,res)=>{
-    let user = req.user;
-    if(!user){
-        return res.status(400).end("Bad Request")
-    }
-    postsManager.getAllPosts(user)
+    logger('info',req.id,__filename,"Start: Get posts")
+    postsManager.getAllPosts(req.id , user)
     .then((posts)=>{
+        logger('info',req.id,__filename,"Posts has been finded")
         return res.status(200).json(posts);
     })
     .catch( error =>{
-        return res.status(400).end("Bad Request")
+        logger('error',req.id,__filename,"Error retriving posts "+error)
+        return res.status(error.code).end(error.message)
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: Get posts")
     })
 });
 
 /**
- *  Busca una publicacion por ID
+ *  Retrive a posts by ID
  */
 router.get('/posts/:id',(req ,res)=>{
+    logger('info',req.id,__filename,"Start: Get posts by id")
     let id = req.params.id;
-    postsManager.findPostByID(id)
+    postsManager.findPostByID(req.id, id)
     .then((posts)=>{
         return res.status(200).json(posts);
     })
     .catch( error =>{
-        return res.status(400).end("Bad Request")
+        logger('error',req.id,__filename,"Error retriving post")
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: Get posts by id");
     })
 });
 
@@ -42,7 +49,7 @@ router.get('/posts/:id',(req ,res)=>{
  *  Create a new Posts
  */
 router.post('/posts', ( req , res )=>{
-
+    logger('info',req.id,__filename,"Start: Creating post")
     let user = req.user;
     let post = req.body;
     if(!user || !post){
@@ -51,17 +58,17 @@ router.post('/posts', ( req , res )=>{
 
     post.user = user._id;
 
-    postsManager.createNewPosts(post)
+    postsManager.createNewPosts(req.id , post)
     .then(()=>{
+        logger('debug',req.id,__filename,"Posts has been created")
         return res.status(200).json({ code: 200 , message : "Posts has been created"})
     })
     .catch( error =>{
-        if(error.code = 500){
-            return res.status(400).end("Bad Request")
-        }
-        else{
-            return res.status(500).end("Internal server Error")
-        }
+        logger('debug', req.id , __filename, error.messages)
+        return res.status(error.code).end(error.messages)
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: Creating post")
     })
 })
 
@@ -70,7 +77,7 @@ router.post('/posts', ( req , res )=>{
  */
 router.delete('/posts/:id', ( req , res )=>{
     let id = req.params.id;
-    postsManager.deletePosts(id)
+    postsManager.deletePosts(req.id , id)
     .then(()=>{
         return res.status(200).json({ code: 200 , message : "Posts has been deleteds"})
     })
@@ -83,6 +90,7 @@ router.delete('/posts/:id', ( req , res )=>{
         }
     })
 });
+
 /**
  * Modify a posts
  */
@@ -104,7 +112,7 @@ router.put('/posts/:id', (req ,res )=>{
         return res.status(401).end('Unauthorized');
     }
 
-    postsManager.modifyPosts(post)
+    postsManager.modifyPosts(req.id ,post)
     .then(()=>{
         return res.status(200).json({ code: 200 , message : "Posts has been modify"})
     })

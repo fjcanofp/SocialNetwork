@@ -21,8 +21,8 @@ exports.searchUser = function (ctx, login, password) {
             })
             .catch(error => {
                 logger('error', ctx, 'Looking for User', error.message);
-                if (error.split(':')[0] === 'ValidationError') {
-                    reject({code: 500, messages: 'Internal sever Error'})
+                if (error instanceof mongoose.Error.ValidationError) {
+                    reject({code: 400, messages: 'Bad Request'})
                 }
                 reject({code: 500, messages: 'Internal sever Error'})
             })
@@ -65,21 +65,28 @@ exports.deleteUser = function (id) {
             })
             .catch(error => {
                 logger('error', 'UserModel', 'Deleting User', error);
-                reject();
+                if (error instanceof mongoose.Error.ValidationError) {
+                    reject({code: 400, messages: 'Bad Request'})
+                }
+                reject({code: 500, messages: 'Internal Server Error'});
             })
     })
 };
 
-exports.modifyUser = function (user) {
+exports.modifyUser = function (ctx , user) {
+    logger('debug',ctx,__filename, "Updating user")
     return new Promise((resolve, reject) => {
         userModel.updateOne({_id: user._id}, user)
             .then((userModified) => {
-                logger('error', 'UserModel', 'Updating User', `User with the id: ${userModified._id} has been modified`);
+                logger('info', ctx , __filename, `User with the id: ${userModified._id} has been modified`);
                 resolve(userModified);
             })
             .catch(error => {
-                logger('error', 'UserModel', 'Error updating user', error);
-                reject();
+                logger('error', ctx , __filename, error);
+                if (error instanceof mongoose.Error.ValidationError) {
+                    reject({code: 400, messages: 'Bad Request'})
+                }
+                reject({code: 500, messages: 'Internal Server Error'});
             })
     })
 };
@@ -100,7 +107,10 @@ exports.findUserById = function (ctx, id) {
             })
             .catch(error => {
                 logger('error', 'UserModel', ctx, error);
-                reject({ error : 500 , messages:"Internal Server Error"});
+                if (error instanceof mongoose.Error.ValidationError) {
+                    reject({code: 400, messages: 'Bad Request'})
+                }
+                reject({code: 500, messages: 'Internal Server Error'});
             })
     })
 };
