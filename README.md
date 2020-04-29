@@ -1,5 +1,4 @@
-# SocialNetwork
-![BASKBOOK](./Cliente/src/Resources/img/fondo2.jpg)
+![BASKBOOK](./Cliente/src/Resources/img/idea.jpg "Baskbook")
 ## Descripcion del Proyecto :
 
 El proyecto consistira en el desarrollo de una Red Social enfocada a deportes,

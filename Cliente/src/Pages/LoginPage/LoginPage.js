@@ -25,12 +25,13 @@ export default function Login() {
     };
 
     return (
-        <>
-            <span id="logo"><span id="logo-bask">Bask</span><span id="logo-book">book</span></span>
+        <div className="login-bg">
             <div id="logreg-forms">
+                <span id="logo"><span id="logo-bask">Bask</span><span id="logo-book">book</span></span>
                 <form className="form-signin" onSubmit={handleSubmit}>
                     {error ? (<div className="alert alert-danger" role="alert">Invalid Credentials</div>) : (<></>)}
-                    <input type="email" id="inputEmail" className="form-control" placeholder="Email address" required=""
+                    <input type="email" id="inputEmail" className="form-control" placeholder="Email address"
+                           required
                            autoFocus="" value={user} onChange={(evt) => {
                         setUser(evt.target.value)
                     }}/>
@@ -39,14 +40,16 @@ export default function Login() {
                            required="" value={password} onChange={(evt) => {
                         setPassword(evt.target.value)
                     }}/>
-                    <button id="signIn" className="btn btn-block" type="submit"><i className="fas fa-sign-in-alt"/> Sign
+                    <button id="signIn" className="btn btn-block" type="submit"><i
+                        className="fas fa-sign-in-alt"/> Sign
                         in
                     </button>
                     <Link to="/Home" id="forgot_pswd">Forgot password?</Link>
                     <hr/>
-                    <Link to="/SignUp" className="btn btn-block" type="button" id="signUp">Sign up New Account</Link>
+                    <Link to="/SignUp" className="btn btn-block" type="button" id="signUp">Sign up New
+                        Account</Link>
                 </form>
             </div>
-        </>
+        </div>
     )
 }

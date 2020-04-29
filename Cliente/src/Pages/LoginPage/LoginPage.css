@@ -3,7 +3,7 @@
     src: url("../../Resources/fonts/Helvetica.ttf");
 }
 
-body {
+.login-bg {
     background-image: url('../../Resources/img/fondo2.jpg');
     background-repeat: no-repeat;
     background-size: cover;
