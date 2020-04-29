@@ -1,7 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let reactionsModels = require('../managers/Reactions');
-
+let logger = require('../utils/LoggerService');
 //========================================//
 //             Reactions API              //
 //========================================//
@@ -12,16 +12,22 @@ let reactionsModels = require('../managers/Reactions');
 router.post('/comment/:id/reaction/',(req ,res)=>{
     let id = req.params.id;
     let reaction = req.body;
+    logger('info',req.id, __filename, "Start Creating reaction on comment "+id)
 
     reaction.comments = id;
     reaction.posts = null;
 
-    reactionsModels.createNewReactions(reaction)
+    reactionsModels.createNewReactions( req.id , reaction)
     .then(( comment )=>{
+        logger('debug',req.id, __filename, "Comment has been created")
         return res.status(200).json( comment );
     })
     .catch( error =>{
-        return res.status(400).end("Bad Request");
+        logger('error',req.id, __filename, "Error at create reactions on comments")
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id, __filename, "End reaction on comment "+id)
     })
 });
 /**
@@ -34,12 +40,19 @@ router.post('/posts/:id/reaction/',(req ,res)=>{
     reaction.posts = idPosts;
     reaction.comments = null;
 
-    reactionsModels.createNewReactions(reaction)
+    logger('info',req.id, __filename, "Start Creating reaction on post "+id)
+
+    reactionsModels.createNewReactions(req.id , reaction)
     .then(( comment )=>{
+        logger('debug',req.id, __filename, "Comment has been created")
         return res.status(200).json( comment );
     })
     .catch( error =>{
-        return res.status(400).end("Bad Request");
+        logger('error',req.id, __filename, "Error at create reactions on post")
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id, __filename, "End reaction on comment "+id)
     })
 });
 
@@ -48,12 +61,18 @@ router.post('/posts/:id/reaction/',(req ,res)=>{
  */
 router.delete('/reaction/:id', ( req , res )=>{
     let id = req.params.id;
-    reactionsModels.deleteReactions(id)
+    reactionsModels.deleteReactions(req.id , id)
+    logger('info',req.id, __filename, "Start removed reaction "+id)
     .then(( )=>{
+        logger('debug',req.id, __filename, "Reaction has been removed "+id)
         return res.status(200).json();
     })
     .catch( error =>{
-        return res.status(400).end("Bad Request");
+        logger('error',req.id, __filename, "Error at delete reaction "+id)
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id, __filename, "End removed reaction "+id)
     })
 });
 

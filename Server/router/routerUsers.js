@@ -13,7 +13,7 @@ let logger = require('../utils/LoggerService');
  * Register a new Users
  */
 router.post('/register',  (req, res) => {
-    logger('info', req.id, __filename, 'INICIO : Creando un nuevo usuario.');
+    logger('info', req.id, __filename, 'Start : Creating new users.');
     let user = req.body;
 
     if(!user.password || !user.login){
@@ -27,7 +27,7 @@ router.post('/register',  (req, res) => {
     user.password = hash;
     userManager.signUpUser(req.id, user)
         .then(( createdUser ) => {
-            logger('info', req.id, __filename, '201 Usuario Creado');
+            logger('info', req.id, __filename, 'user has been created');
 
             const userForToken = {
                 username: createdUser.username,
@@ -39,11 +39,11 @@ router.post('/register',  (req, res) => {
             return res.status(201).send({ token , user: user });
         })
         .catch(error => {
-            logger('error', req.id, __filename, 'Error : ' + error.message);
-            return res.status(error.code).json(error);
+            logger('error', req.id, __filename, 'Error : ' + error.messages);
+            return res.status(error.code).end(error.messages);
         })
         .finally(() => {
-            logger('info', req.id, __filename, 'FIN : Creando un nuevo usuario.');
+            logger('info', req.id, __filename, 'END : Creating new users.');
         })
 
 });
@@ -52,7 +52,7 @@ router.post('/register',  (req, res) => {
  *  Modify a User
  */
 router.put('/user/:id', (req, res) => {
-    logger('info', req.id, __filename, 'INICIO : Modificando un nuevo usuario.');
+    logger('info', req.id, __filename, 'Start : updating  a user.');
 
     let user = req.body;
     let id = req.params.id;
@@ -64,17 +64,17 @@ router.put('/user/:id', (req, res) => {
     }
 
 
-    userManager.modifyUser(user)
+    userManager.modifyUser(req.id , user)
         .then((user) => {
-            logger('info', req.id, __filename, 'Usuario a sido modificado ');
+            logger('info', req.id, __filename, 'user has been modified with id '+id);
             return res.status(200).json({ code: 200, message: 'Ok ' });
         })
         .catch(error => {
-            logger('error', req.id, __filename, 'Error al modificar un usuario ' + error);
-            return res.status(400).end("Bad Request");
+            logger('error', req.id, __filename, 'error updating user :' + error);
+            return res.status(error.code).end(error.messages);
         })
         .finally(() => {
-            logger('info', req.id, __filename, 'FIN : Modificando un nuevo usuario.');
+            logger('info', req.id, __filename, 'End : updating  a user.');
         })
 })
 
@@ -82,20 +82,26 @@ router.put('/user/:id', (req, res) => {
  * Delete a users
  */
 router.delete('/user/:id', (req, res) => {
-
+    logger('info',req.id,__filename,"Start: delete user.");
     let user = req.body;
     let id = req.params.id;
 
     if (user._id != id) {
+        logger('warn',req.id,__filename,"Security validations fail")
         return res.status(400).end("Bad Request")
     }
 
     userManager.deleteUser(id)
         .then(() => {
+            logger('debug',req.id,__filename,"User has been deleted with id"+id)
             return res.status(200).json({ code: 200, message: "User has been deleted" })
         })
         .catch(error => {
-            return res.status(400).end("Bad Request")
+            logger('error',req.id,__filename,"Error deleting user with id "+id)
+            return res.status(error.code).end(error.messages);
+        })
+        .finally(()=>{
+            logger('info',req.id,__filename,"End: delete user.")
         })
 });
 
@@ -108,7 +114,7 @@ router.get('/user/:id', (req, res) => {
             return res.status(200).json(user);
         })
         .catch(error => {
-            return res.status(error.error).end("Bad Request");
+            return res.status(error.code).end(error.messages);
         })
 });
 

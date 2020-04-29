@@ -1,17 +1,17 @@
 
 
   Probamos la fiabilidad de el login : 
-    √ Solicitamos una peticion sin la cabecera de autenticacion :
+    √ Solicitamos una peticion sin la cabecera de autenticacion : (43ms)
     √ Solicitamos una peticion con la cabecera mal formada :
     √ Solicitamos una peticion con un usuario sin registrar:
 
   Prueba la api rest de usuarios: 
-    √ [POST /register] Registramos un usuario : (122ms)
+    √ [POST /register] Registramos un usuario : (242ms)
     √ [POST /register] Registramos sin nada en el body :
-    √ [GET /User/:id] Buscar un usuario :
+    √ [GET /User/:id] Buscar un usuario : (50ms)
     √ [PUT /USER/:ID ] Intentamos modificar un usuario distinto al nuestro :
     √ [DELETE /USER/:ID] Eliminar un usuario, debe fallar , solo puede darse de baja a si mismo:
 
 
-  8 passing (552ms)
+  8 passing (553ms)
 
