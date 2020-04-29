@@ -26,9 +26,9 @@ export default function Register() {
     }
 
     return (
-        <>
-            <span id="logo"><span id="logo-bask">Bask</span><span id="logo-book">book</span></span>
+        <div className="login-bg">
             <div id="logreg-forms">
+                <span id="logo"><span id="logo-bask">Bask</span><span id="logo-book">book</span></span>
                 <form className="form-signin" onSubmit={handleSubmit}>
                     {error ? (<div className="alert alert-danger" role="alert">Registration error</div>) : (<></>)}
                     <input type="text" id="inputName" className="form-control" placeholder="Name" required
@@ -52,6 +52,6 @@ export default function Register() {
                     <Link to="/SignIn" className="btn btn-block" type="button" id="register-btn-signUp">Sign in</Link>
                 </form>
             </div>
-        </>
+        </div>
     )
 }

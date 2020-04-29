@@ -25,9 +25,9 @@ export default function Login() {
     };
 
     return (
-        <>
-            <span id="logo"><span id="logo-bask">Bask</span><span id="logo-book">book</span></span>
+        <div className="login-bg">
             <div id="logreg-forms">
+                <span id="logo"><span id="logo-bask">Bask</span><span id="logo-book">book</span></span>
                 <form className="form-signin" onSubmit={handleSubmit}>
                     {error ? (<div className="alert alert-danger" role="alert">Invalid Credentials</div>) : (<></>)}
                     <input type="email" id="inputEmail" className="form-control" placeholder="Email address"
@@ -50,6 +50,6 @@ export default function Login() {
                         Account</Link>
                 </form>
             </div>
-        </>
+        </div>
     )
 }
