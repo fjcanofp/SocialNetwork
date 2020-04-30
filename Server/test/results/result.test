@@ -5,6 +5,13 @@
     √ Solicitamos una peticion con la cabecera mal formada :
     √ Solicitamos una peticion con un usuario sin registrar:
 
+  Probamos la API de Comentarios
+    √ Creamos un comentario en una publicacion : (100ms)
+    √ Creamos un comentario en una en un comentario :
+    √ Modificamos un comentario :
+    √ Eliminamos un comentario del post :
+    √ Eliminamos un comentario de un commentario :
+
   Pruebas de la API Rest de POSTS: 
     √ [POST /posts] Creamos un posts :
     √ [PUT /posts] Modificamos un posts :
@@ -13,7 +20,7 @@
     √ [DELETE /posts] Eliminamos un posts :
 
   Prueba la api rest de usuarios: 
-    √ [POST /register] Registramos un usuario : (124ms)
+    √ [POST /register] Registramos un usuario : (120ms)
     √ [POST /register] Registramos sin nada en el body :
     √ [GET /User/:id] Buscar un usuario :
     √ [PUT /USER/:ID ] Intentamos modificar un usuario distinto al nuestro :
@@ -21,5 +28,5 @@
     √ [DELETE /USER/:ID] Eliminar un usuario :
 
 
-  14 passing (460ms)
+  19 passing (634ms)
 

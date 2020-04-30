@@ -2,23 +2,24 @@ const logger = require('../utils/LoggerService');
 const CommentsModel = require('../entity/CommentsModel').CommentsModel;
 const PostModel = require('../managers/Posts');
 
-exports.createNewComments = function( comments ){  
-    logger('debug','PostsModel','Create Comment', '' );
+exports.createNewComments = function( ctx , comments ){  
+    logger('debug',ctx,__filename, 'Creating new comment' );
     return new Promise(( resolve , reject )=>{
         if(!comments){
-            logger('debug','PostsModel','Create Comment', 'Bad Request no comments on body');
+            logger('debug',ctx,__filename, 'Bad Request no comments on body');
             reject({
                 code : 400 ,
-                message : "Bad Request"
+                messages : "Bad Request"
             });
         }
         const comment = new CommentsModel(comments);
         comment.save()
         .then(( comments )=>{
-            logger('debug','PostsModel','Create Comment', 'Comment has been created with id ' + comments._id);
+            logger('debug',ctx,__filename, 'Comment has been created with id ' + comments._id);
             resolve(comments)
         })
         .catch(( error )=>{
+            logger('error',ctx,__filename, error);
             reject({
                 code : 500, 
                 messages: "Internal Server Error"
@@ -27,23 +28,24 @@ exports.createNewComments = function( comments ){
     })
 }
 
-exports.modifyComments = function( comments ){
-    logger('debug','PostsModel','Create Comment', '' );
+exports.modifyComments = function( ctx , comments ){
+    logger('debug',ctx,__filename, 'Modifing a comment' );
     return new Promise(( resolve , reject )=>{
         if(!comments){
-            logger('debug','PostsModel','Modify Comment', 'Bad Request no comments on body');
+            logger('debug',ctx,__filename, 'Bad Request no comments on body');
             reject({
                 code : 400 ,
-                message : "Bad Request"
+                messages : "Bad Request"
             });
         }
-        new CommentsModel(comments)
-        .updateOne()
+        //new CommentsModel(comments).update()
+        CommentsModel.updateOne({ _id : comments._id }, comments )
         .then(( comments )=>{
-            logger('debug','PostsModel','Modify Comment', 'Comment has been updated with id ' + comments._id);
+            logger('debug',ctx,__filename, 'Comment has been updated with id ' + comments._id);
             resolve()
         })
         .catch(( error )=>{
+            logger('error',ctx,__filename, error);
             reject({
                 code : 500, 
                 messages: "Internal Server Error"
@@ -52,19 +54,19 @@ exports.modifyComments = function( comments ){
     })
 }
 
-exports.deleteComments = function( id ){
+exports.deleteComments = function( ctx , id ){
     return new Promise(( resolve , reject )=>{
-        logger('debug','PostsModel','Delete Comment', 'Deleting comments with id ' + id);
+        logger('debug',ctx,__filename, 'Deleting comments with id ' + id);
         CommentsModel.findOne({_id : id})
         .then(( comments )=>{
-            logger('debug','PostsModel','Delete Comment', 'Comment has been Deleted with id ' + id);
+            logger('debug',ctx,__filename, 'Comment has been Deleted with id ' + id);
             return new CommentsModel(comments).remove()
         })
         .then(()=>{
             resolve()
         })
         .catch(( error )=>{
-            logger('error','PostsModel','Delete Comment', 'Comment has been Deleted with error ' + error);
+            logger('error',ctx,__filename, 'Comment has been Deleted with error ' + error);
             reject({
                 code : 500, 
                 messages: "Internal Server Error"

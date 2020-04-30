@@ -21,7 +21,7 @@ router.post('/comment/:id_comentarios/comment/',(req ,res)=>{
     commentsManager.createNewComments(comment)
     .then(( comment )=>{
         logger('debug',req.id,__filename,"a new comment on a comment has been created")
-        return res.status(200).json( comment );
+        return res.status(201).json( comment );
     })
     .catch( error =>{
         logger('error',req.id,__filename, error)
@@ -41,10 +41,10 @@ router.post('/posts/:id/comment/',(req ,res)=>{
     let comment = req.body;
     comment.posts = idPosts;
     comment.comments = null;
-    commentsManager.createNewComments(comment)
+    commentsManager.createNewComments(req.id , comment)
     .then(( comment )=>{
         logger('debug',req.id,__filename,"A new comment on a post has been created "+ comment._id)
-        return res.status(200).json( comment );
+        return res.status(201).json( comment );
     })
     .catch( error =>{
         logger('error',req.id,__filename,error)
@@ -61,7 +61,7 @@ router.post('/posts/:id/comment/',(req ,res)=>{
 router.delete('/comments/:id', ( req , res )=>{
     logger('info',req.id,__filename,"Start: delete a comment")
     let id = req.params.id;
-    commentsManager.deleteComments(id)
+    commentsManager.deleteComments(req.id , id)
     .then(( comment )=>{
         logger('debug',req.id,__filename,"Comments has been deleted id : " + id)
         return res.status(200).json( comment );
@@ -84,7 +84,7 @@ router.put('/comments/:id_comments', ( req , res )=>{
 
     comment._id = idComment;
     logger('info',req.id,__filename,"Start modify a comment")
-    commentsManager.modifyComments(comment)
+    commentsManager.modifyComments(req.id , comment)
     .then(( comment )=>{
         return res.status(200).json( comment );
     })

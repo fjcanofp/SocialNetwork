@@ -33,7 +33,7 @@ router.get('/posts',(req ,res)=>{
 router.get('/posts/:id',(req ,res)=>{
     logger('info',req.id,__filename,"Start: Get posts by id")
     let id = req.params.id;
-    postsManager.findPostByID(req.id, id)
+    postsManager.findPostByID(req.id , id)
     .then((posts)=>{
         return res.status(200).json(posts);
     })

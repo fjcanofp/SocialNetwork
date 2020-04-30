@@ -40,7 +40,7 @@ const closeConexionWithDB = function (done) {
 
 exports.url = 'localhost:8080';
 exports.user = user;
-
+exports.db = mongoose.connection;
 
 exports.authHeader = { 
   "Authorization": 'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6InRlc3RAc3VwZXJ0ZXN0LmNvbSIsImlkIjoiNWVhODcxZDc3MDExMjgyNTA0ZDU4YzAyIiwiaWF0IjoxNTg4MTAyODAxfQ.elbL4EnI8xzhIkWByTSIgxyJWxqIDAwqDDLLM2JrmJ4'
