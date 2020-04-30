@@ -60,7 +60,7 @@ exports.deleteUser = function (id) {
     return new Promise((resolve, reject) => {
         userModel.remove({_id: id})
             .then(() => {
-                logger('error', 'UserModel', 'Deleting User', `User with the id: ${id} has been deleted`);
+                logger('debug', 'UserModel', 'Deleting User', `User with the id: ${id} has been deleted`);
                 resolve();
             })
             .catch(error => {

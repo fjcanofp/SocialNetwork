@@ -30,7 +30,12 @@ const connectDB = function (done) {
 };
 
 const closeConexionWithDB = function (done) {
-  mongoose.connection.close(done);
+  const db = mongoose.connection;
+  db.collection('user_collections')
+  .deleteOne({ '_id' : user._id })
+  .then(()=>{
+    mongoose.connection.close(done);
+  })
 };
 
 exports.url = 'localhost:8080';

@@ -11,6 +11,7 @@ const logger = require('../utils/LoggerService');
  *  Lists all Posts
  */
 router.get('/posts',(req ,res)=>{
+    let user = req.user;
     logger('info',req.id,__filename,"Start: Get posts")
     postsManager.getAllPosts(req.id , user)
     .then((posts)=>{
@@ -18,7 +19,7 @@ router.get('/posts',(req ,res)=>{
         return res.status(200).json(posts);
     })
     .catch( error =>{
-        logger('error',req.id,__filename,"Error retriving posts "+error)
+        logger('error',req.id,__filename,"Error retriving posts "+error.message)
         return res.status(error.code).end(error.message)
     })
     .finally(()=>{
@@ -59,9 +60,9 @@ router.post('/posts', ( req , res )=>{
     post.user = user._id;
 
     postsManager.createNewPosts(req.id , post)
-    .then(()=>{
+    .then((newPost)=>{
         logger('debug',req.id,__filename,"Posts has been created")
-        return res.status(200).json({ code: 200 , message : "Posts has been created"})
+        return res.status(201).json(newPost);
     })
     .catch( error =>{
         logger('debug', req.id , __filename, error.messages)
@@ -112,12 +113,12 @@ router.put('/posts/:id', (req ,res )=>{
         logger('warn',req.id,__filename," security url and post id are diferents")
         return res.status(401).end('Unauthorized');
     }
-    
+    /*
     if(user._id != post.user){
         logger('warn',req.id,__filename," security cannot modify a post of another user")
         return res.status(401).end('Unauthorized');
     }
-
+    */
     postsManager.modifyPosts(req.id ,post)
     .then(()=>{
         return res.status(200).json({ code: 200 , message : "Posts has been modify"})

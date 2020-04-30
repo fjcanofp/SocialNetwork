@@ -5,8 +5,15 @@
     √ Solicitamos una peticion con la cabecera mal formada :
     √ Solicitamos una peticion con un usuario sin registrar:
 
+  Pruebas de la API Rest de POSTS: 
+    √ [POST /posts] Creamos un posts :
+    √ [PUT /posts] Modificamos un posts :
+    √ [GET /posts/id] Obtenemos un posts :
+    √ [GET /posts] Obtenemos todos los posts :
+    √ [DELETE /posts] Eliminamos un posts :
+
   Prueba la api rest de usuarios: 
-    √ [POST /register] Registramos un usuario : (115ms)
+    √ [POST /register] Registramos un usuario : (124ms)
     √ [POST /register] Registramos sin nada en el body :
     √ [GET /User/:id] Buscar un usuario :
     √ [PUT /USER/:ID ] Intentamos modificar un usuario distinto al nuestro :
@@ -14,5 +21,5 @@
     √ [DELETE /USER/:ID] Eliminar un usuario :
 
 
-  9 passing (304ms)
+  14 passing (460ms)
 
