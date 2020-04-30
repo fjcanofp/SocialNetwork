@@ -1,5 +1,4 @@
-let db = require('..');
-let { url , authHeader} = require('../index');
+let { db , url , authHeader} = require('../index');
 
 let chai = require('chai');
 let chaiHttp = require('chai-http');
