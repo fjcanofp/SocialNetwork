@@ -1,4 +1,4 @@
-![BASKTBOOK](./Cliente/src/Resources/img/idea2.jpg "Basktbook")
+![BASKTBOOK](./Cliente/src/Resources/img/logoGitHub.jpg "Basktbook")
 ## Descripcion del Proyecto :
 
 El proyecto consistira en el desarrollo de una Red Social enfocada a deportes,
