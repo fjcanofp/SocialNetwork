@@ -46,11 +46,11 @@ class AuthService {
     }
 
     setUserInfo( User ){
-        sessionStorage.setItem(SESSION_ID , JSON.stringify(User) );
+        sessionStorage.setItem(SESSION_ID , JSON.stringify(User));
     }
 
     getUserInfo(){
-        return JSON.parse(sessionStorage.getItem(SESSION_ID));
+        return JSON.parse(sessionStorage.getItem(SESSION_ID)).user;
     }
 
     getAuthHeader() {
