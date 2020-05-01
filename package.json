@@ -1,0 +1,21 @@
+{
+  "name": "socialnetwork",
+  "version": "1.0.0",
+  "description": "SocialNetwork",
+  "main": "null",
+  "scripts": {
+    "client": "cd Cliente && npm start",
+    "server": "cd Server && npm start",
+    "start": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GeroAlv-Alex/SocialNetwork.git"
+  },
+  "author": "Gero&Jose",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GeroAlv-Alex/SocialNetwork/issues"
+  },
+  "homepage": "https://github.com/GeroAlv-Alex/SocialNetwork#readme"
+}
