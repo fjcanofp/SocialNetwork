@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/GeroAlv-Alex/SocialNetwork/issues"
   },
-  "homepage": "https://github.com/GeroAlv-Alex/SocialNetwork#readme"
+  "homepage": "https://github.com/GeroAlv-Alex/SocialNetwork#readme",
+  "dependencies": {
+    "concurrently": "^5.2.0"
+  }
 }
