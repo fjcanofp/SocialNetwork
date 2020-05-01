@@ -7,7 +7,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
         <Route {...rest} render={props => (
             AuthService.getUserInfo() ?
                 <Component {...props} />
-            : <Redirect to="/SignIn" />
+            : <Redirect to="/" />
         )} />
     );
 };

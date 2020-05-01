@@ -15,15 +15,15 @@ export default function CreatePost() {
     }
 
     return (
-        <div class="card">
-            <div class="card-header">
+        <div className="card">
+            <div className="card-header">
                 Posts
             </div>
-            <div class="card-body">
+            <div className="card-body">
                 <div className="row">
-                    <img src="http://placekitten.com/45/45" class="rounded float-left col-3 h-100 pb-4" alt="..." />
+                    <img src="http://placekitten.com/45/45" className="rounded float-left col-3 h-100 pb-4" alt="..." />
                     <div className="form-group col-9">
-                        <input className="form-control h-100" type="text" placeholder="Your comments" value={postText} onChange={(evt) => { setPostText(evt.target.value) }}/>
+                        <input className="form-control h-100" type="text" placeholder="¿Qué te cuentas hoy?" value={postText} onChange={(evt) => { setPostText(evt.target.value) }}/>
                     </div>
                 </div>
                 <div className="row">

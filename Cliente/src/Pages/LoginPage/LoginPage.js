@@ -15,13 +15,8 @@ export default function Login() {
             login: user,
             password: password
         })
-            .then(User => {
-                alert(` Welcome ${User.login}`);
-                history.push("/home");
-            })
-            .catch(error => {
-                setError(error);
-            })
+            .then( () => history.push("/home") )
+            .catch(error =>  setError(error) )
     };
 
     return (

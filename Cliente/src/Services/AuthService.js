@@ -59,7 +59,7 @@ class AuthService {
 
     logOut() {
         sessionStorage.removeItem(SESSION_ID);
-        return axios.post(USER_API_BASE_URL + 'logout', {}, this.getAuthHeader());
+        //return axios.post(USER_API_BASE_URL + 'logout', {}, this.getAuthHeader());
     }
 }
 
