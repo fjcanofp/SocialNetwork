@@ -1,6 +1,6 @@
 let express = require("express")
 let http = require("http")
-
+let mailer = require('./utils/mailer')
 let db_util = require("./utils/db_connection")
 
 let dotenv = require('dotenv');
@@ -24,8 +24,7 @@ db_util.conectar()
     process.exit(1)
 })
 
-function arrancarServidor(){
-    
+function arrancarServidor(){    
     logger('info','SERVER','APP.JS','Starting server ...')
     let app = express();
 

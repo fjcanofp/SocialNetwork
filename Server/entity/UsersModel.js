@@ -13,7 +13,8 @@ const schemaUsers = mongoose.Schema({
         minlength: 5
     },
     name: String,
-    avatar : String
+    avatar : String,
+    recoveryID : String
 });
 
 exports.UsersModel = mongoose.model(process.env.DB_USER_COLLECTION, schemaUsers);

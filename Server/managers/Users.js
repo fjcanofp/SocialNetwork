@@ -1,6 +1,9 @@
 const userModel = require('../entity/UsersModel').UsersModel;
+const bcrypt = require('bcrypt');
 const logger = require('../utils/LoggerService');
 const mongoose = require('mongoose');
+const utils = require('../utils/utils')
+const mailer = require('../utils/mailer')
 /**
  * Looking for a user from login and password
  * @param ctx
@@ -114,3 +117,71 @@ exports.findUserById = function (ctx, id) {
             })
     })
 };
+/**
+ * Make a new request to recover password
+ */
+exports.applyRecovery = (ctx , email ) => {
+    let user ;
+    let securityID;
+    return new Promise((resolve, reject) => {
+        userModel.findOne({ login : email})
+        .then(_user =>{
+            logger('debug', ctx, __filename, 'applying recovery to user '+_user._id);
+            securityID = utils.randomString(5);
+            _user.recoveryID = securityID;
+            user = _user;
+            return this.modifyUser(ctx , _user ) 
+        })
+        .then(()=>{
+            logger('debug', ctx, __filename, 'applying recovery');
+            mailer.sendMailRecoveryPassword(user.login , user.name , securityID )
+            resolve();
+        })
+        .catch(error=>{
+            logger('error', ctx, __filename, error);
+            if (error instanceof mongoose.Error) {
+                reject({code: 400, messages: 'Bad Request'})
+            }
+            reject({code: 500, messages: 'Internal Server Error'});
+        })
+    })
+}
+/*
+*  Change password
+*/
+exports.makeRecovery = (ctx , r_user  ) => {
+    return new Promise((resolve, reject) => {
+        userModel.findOne({ login : r_user.login })
+        .then(user =>{
+
+            if(!user.recoveryID){
+                logger('warn', ctx, __filename, 'user without recoveryID '+user._id);
+                reject({code: 400, messages: 'Bad Request'})
+            }
+
+            if(!r_user.recoveryID == user.recoveryID){
+                logger('warn', ctx, __filename, 'user invalid recoveryID '+user._id);
+                reject({code: 400, messages: 'Bad Request'})
+            }
+
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(r_user.password, salt);
+            
+            user.recoveryID = null;
+            user.password = hash;
+
+            return this.modifyUser(ctx , user ) 
+        })
+        .then(()=>{
+            logger('debug', ctx, __filename, 'password has been changed');
+            resolve();
+        })
+        .catch(error=>{
+            logger('error', ctx, __filename, error);
+            if (error instanceof mongoose.Error) {
+                reject({code: 400, messages: 'Bad Request'})
+            }
+            reject({code: 500, messages: 'Internal Server Error'});
+        })
+    })
+}

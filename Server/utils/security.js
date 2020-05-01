@@ -14,8 +14,8 @@ const getTokenFrom = request => {
 }
 
 exports.interceptorJWT = function(request, response, next){
-
-    if(request.url == '/register' || request.url == '/login' ){
+    
+    if(request.url == '/register' || request.url == '/login' || request.url == '/recovery' ){
         logger('debug','AUTH',request.id , request.url+" don't need auth" );
         next();
         return

@@ -6,6 +6,7 @@ import Home from './Pages/HomePage/HomePage'
 import Login from './Pages/LoginPage/LoginPage';
 import Register from './Pages/RegisterPage/RegisterPage';
 import ProfilePage from './Pages/ProfilePage/ProfilePage';
+import RecoveryPage from './Pages/RecoveryPage/RecoveryPage';
 import _404 from './Pages/_404/_404';
 
 class App extends Component {
@@ -18,6 +19,8 @@ class App extends Component {
            <Route path="/SignUp" exact component={ Register }/>
            <PrivateRoute component={Home} path="/home" exact />
            <PrivateRoute component={ ProfilePage } path="/profile/:id" exact/>
+           <Route path="/recovery/:id" component={ RecoveryPage }/>
+           <Route path="/recovery" component={ RecoveryPage }/>
            <Route component={_404} />
         </Switch>
       </BrowserRouter>

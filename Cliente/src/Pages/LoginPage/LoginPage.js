@@ -39,7 +39,7 @@ export default function Login() {
                         className="fas fa-sign-in-alt"/> Sign
                         in
                     </button>
-                    <Link to="/Home" id="forgot_pswd">Forgot password?</Link>
+                    <Link to="/recovery" id="forgot_pswd">Forgot password?</Link>
                     <hr/>
                     <Link to="/SignUp" className="btn btn-block" type="button" id="signUp">Sign up New
                         Account</Link>

@@ -17,6 +17,7 @@
     "locate-path": "^3.0.0",
     "mocha": "^7.1.1",
     "mongoose": "^5.9.7",
+    "nodemailer": "^6.4.6",
     "p-locate": "^3.0.0",
     "path-exists": "^3.0.0",
     "path-is-absolute": "^1.0.1",

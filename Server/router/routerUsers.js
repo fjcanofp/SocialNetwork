@@ -145,4 +145,49 @@ router.post('/login', async (req, res) => {
 
 });
 
+/**
+ * Recovery Password    
+ */
+router.post('/recovery', (req, res)=>{
+    logger('info',req.id,__filename,"Start: apply recovery password.")
+    let login = req.body.login;
+    userManager.applyRecovery(req.id , login)
+    .then( (user) =>{
+        logger('info',req.id,__filename,"apply recovery password ok.")
+        return res
+                .status(200)
+                .send();
+    })
+    .catch(error=>{
+        logger('error',req.id,__filename,"Error deleting user with id "+id)
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: apply recovery password.")
+    })
+})
+
+/**
+ * Change Password    
+ */
+router.put('/recovery', (req, res)=>{
+    logger('info',req.id,__filename,"Start: change password.")
+
+    let user = req.body;
+    userManager.makeRecovery(req.id , user )
+    .then( () =>{
+        logger('info',req.id,__filename,"password changed ok.")
+        res
+            .status(200)
+            .send();
+    })
+    .catch(error=>{
+        logger('error',req.id,__filename,"Error deleting user with id "+id)
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: change password.")
+    })
+})
+
 exports.userRouter = router;
