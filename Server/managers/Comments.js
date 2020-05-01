@@ -92,7 +92,7 @@ exports.updateCommentsDependenciesAtCreate = function( comment , next  ){
 
 exports.updatePostsDependenciesAtCreate = function( comment , next ){
     logger('debug',__filename,'Adding reference of comment on posts',comment._id);
-    PostModel.findPostByID( comment.posts )
+    PostModel.findPostByID('BATCH', comment.posts )
     .then( post =>{
                 logger('debug',__filename,'Post of reference find ',post._id);
                 post.comments.push(comment._id);
@@ -132,7 +132,7 @@ exports.updateCommentsDependenciesAtDelete = function( commentDeleted ){
 }
 exports.updatePostsDependenciesAtDelete = function( commentDeleted ){   
 
-    PostModel.findPostByID( commentDeleted.posts  )
+    PostModel.findPostByID('BATCH', commentDeleted.posts  )
     .then( cPosts =>{
         let arrAux = []
         for (const iterator of cPosts.comments) {

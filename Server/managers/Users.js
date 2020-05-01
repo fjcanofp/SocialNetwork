@@ -8,19 +8,19 @@ const mongoose = require('mongoose');
  * @param { String } password
  */
 exports.searchUser = function (ctx, login, password) {
-    logger('info', 'UserModel', ctx, 'Looking for Authenticate');
+    logger('info', ctx ,__filename , 'Looking for Authenticate');
     return new Promise(function (resolve, reject) {
         userModel.findOne({login: login, password: password})
             .then(user => {
                 if (!user) {
-                    logger('warn', ctx, '400', 'User not found');
+                    logger('warn', ctx, __filename , 'User not found');
                     reject({code: 400, messages: 'Not found'});
                     return
                 }
                 resolve(user)
             })
             .catch(error => {
-                logger('error', ctx, 'Looking for User', error.message);
+                logger('error', ctx, __filename , error);
                 if (error instanceof mongoose.Error.ValidationError) {
                     reject({code: 400, messages: 'Bad Request'})
                 }
@@ -35,13 +35,13 @@ exports.searchUser = function (ctx, login, password) {
  * @param user
  */
 exports.signUpUser = function (ctx, user) {
-    logger('debug', 'UserModel', ctx, 'Creating a new User');
+    logger('debug', ctx, __filename, 'Creating a new User');
     return new Promise((resolve, reject) => {
         //delete user._id;
         user = new userModel(user);
         user.save()
             .then((createdUser) => {
-                logger('info', 'UserModel', ctx, 'New user has been created, id:' + createdUser._id);
+                logger('info', ctx, __filename, 'New user has been created, id:' + createdUser._id);
                 resolve(createdUser);
             })
             .catch((error) => {
@@ -50,21 +50,21 @@ exports.signUpUser = function (ctx, user) {
                     reject({code: 400, messages: 'Bad Request'})
                 }
 
-                logger('error', 'UserModel', ctx, error);
+                logger('error', ctx, __filename, error);
                 reject({code: 500, messages: 'Internal sever Error'})
             })
     })
 };
 
-exports.deleteUser = function (id) {
+exports.deleteUser = function ( ctx , id) {
     return new Promise((resolve, reject) => {
         userModel.remove({_id: id})
             .then(() => {
-                logger('debug', 'UserModel', 'Deleting User', `User with the id: ${id} has been deleted`);
+                logger('debug', ctx, 'Deleting User', `User with the id: ${id} has been deleted`);
                 resolve();
             })
             .catch(error => {
-                logger('error', 'UserModel', 'Deleting User', error);
+                logger('error', ctx, 'Deleting User', error);
                 if (error instanceof mongoose.Error.ValidationError) {
                     reject({code: 400, messages: 'Bad Request'})
                 }
@@ -96,17 +96,17 @@ exports.findUserById = function (ctx, id) {
         userModel.findById(id)
             .then((user) => {
                 if (!user) {
-                    logger('info', 'UserModel', ctx, 'User has not been find by id ' + id);
+                    logger('info', ctx, __filename, 'User has not been find by id ' + id);
                     reject({
                         error: 404,
                         message: "Not Found"
                     })
                 }
-                logger('info', 'UserModel', ctx, 'User has been find by id ' + id);
+                logger('info', ctx, __filename, 'User has been find by id ' + id);
                 resolve(user);
             })
             .catch(error => {
-                logger('error', 'UserModel', ctx, error);
+                logger('error', ctx, __filename, error);
                 if (error instanceof mongoose.Error.ValidationError) {
                     reject({code: 400, messages: 'Bad Request'})
                 }

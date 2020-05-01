@@ -6,7 +6,7 @@
     √ Solicitamos una peticion con un usuario sin registrar:
 
   Probamos la API de Comentarios
-    √ Creamos un comentario en una publicacion : (100ms)
+    √ Creamos un comentario en una publicacion : (42ms)
     √ Creamos un comentario en una en un comentario :
     √ Modificamos un comentario :
     √ Eliminamos un comentario del post :
@@ -19,8 +19,14 @@
     √ [GET /posts] Obtenemos todos los posts :
     √ [DELETE /posts] Eliminamos un posts :
 
+  Probamos la API de Reacciones
+    √ Creamos una reaccion en un comentario:
+    √ Eliminamos la reaccion
+    √ Creamos una reaccion en un posts: (47ms)
+    √ Eliminamos la reaccion
+
   Prueba la api rest de usuarios: 
-    √ [POST /register] Registramos un usuario : (120ms)
+    √ [POST /register] Registramos un usuario : (108ms)
     √ [POST /register] Registramos sin nada en el body :
     √ [GET /User/:id] Buscar un usuario :
     √ [PUT /USER/:ID ] Intentamos modificar un usuario distinto al nuestro :
@@ -28,5 +34,5 @@
     √ [DELETE /USER/:ID] Eliminar un usuario :
 
 
-  19 passing (634ms)
+  23 passing (654ms)
 

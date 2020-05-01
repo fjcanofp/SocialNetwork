@@ -62,7 +62,7 @@ exports.updateCommentsDependenciesAtCreate = function( reaction ){
 }
 
 exports.updatePostsDependenciesAtCreate = function( reaction ){
-    PostModel.findPostByID( reaction.post )
+    PostModel.findById(reaction.post )
             .then( post =>{
                 post.reactions.push(reaction._id);
                 PostModel.modifyPosts(post)
@@ -93,7 +93,7 @@ exports.updateCommentsDependenciesAtDelete = function( reaction ){
     })
 }
 exports.updatePostsDependenciesAtDelete = function( reaction ){   
-    PostModel.findPostByID( reaction.posts  )
+    PostModel.findById(reaction.posts  )
     .then( posts =>{
         let arrAux = []
         for (const iterator of posts.reactions ) {

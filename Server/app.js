@@ -35,7 +35,12 @@ function arrancarServidor(){
     app.use(routerComment);
     app.use(routerEvents);
     app.use(routerReaction);
-    
+
+    app.use((err, req, res, next)=>{
+        logger('error','SERVER',__filename,err.stack);
+        next();
+    });
+
     let servidor = http.createServer(app);
     servidor.listen( process.env.PORT , () => {
         logger('info','SERVER','APP.JS','Listening at port '+ process.env.PORT);

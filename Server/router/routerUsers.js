@@ -91,7 +91,7 @@ router.delete('/user/:id', (req, res) => {
         return res.status(400).end("Bad Request")
     }
 
-    userManager.deleteUser(id)
+    userManager.deleteUser(req.id , id)
         .then(() => {
             logger('debug',req.id,__filename,"User has been deleted with id "+id)
             return res.status(200).json({ code: 200, message: "User has been deleted" })

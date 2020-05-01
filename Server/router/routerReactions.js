@@ -20,7 +20,7 @@ router.post('/comment/:id/reaction/',(req ,res)=>{
     reactionsModels.createNewReactions( req.id , reaction)
     .then(( comment )=>{
         logger('debug',req.id, __filename, "Comment has been created")
-        return res.status(200).json( comment );
+        return res.status(201).json( comment );
     })
     .catch( error =>{
         logger('error',req.id, __filename, "Error at create reactions on comments")
@@ -40,19 +40,19 @@ router.post('/posts/:id/reaction/',(req ,res)=>{
     reaction.posts = idPosts;
     reaction.comments = null;
 
-    logger('info',req.id, __filename, "Start Creating reaction on post "+id)
+    logger('info',req.id, __filename, "Start Creating reaction on post "+ idPosts)
 
     reactionsModels.createNewReactions(req.id , reaction)
     .then(( comment )=>{
         logger('debug',req.id, __filename, "Comment has been created")
-        return res.status(200).json( comment );
+        return res.status(201).json( comment );
     })
     .catch( error =>{
-        logger('error',req.id, __filename, "Error at create reactions on post")
+        logger('error',req.id, __filename, "Error at create reactions on post " + idPosts)
         return res.status(error.code).end(error.messages);
     })
     .finally(()=>{
-        logger('info',req.id, __filename, "End reaction on comment "+id)
+        logger('info',req.id, __filename, "End reaction on posts "+idPosts)
     })
 });
 
@@ -61,8 +61,8 @@ router.post('/posts/:id/reaction/',(req ,res)=>{
  */
 router.delete('/reaction/:id', ( req , res )=>{
     let id = req.params.id;
-    reactionsModels.deleteReactions(req.id , id)
     logger('info',req.id, __filename, "Start removed reaction "+id)
+    reactionsModels.deleteReactions(req.id , id)
     .then(( )=>{
         logger('debug',req.id, __filename, "Reaction has been removed "+id)
         return res.status(200).json();
