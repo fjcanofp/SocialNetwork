@@ -27,7 +27,6 @@ export default function PostsBox({ postID , title , user , post_time }) {
         if( !title || !user || !post_time ){
             PostService.getPostbyID( postID )
             .then( post =>{
-                console.log(post)
                 setPost(post)
             })
             .catch( error =>{
