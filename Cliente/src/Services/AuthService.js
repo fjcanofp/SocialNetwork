@@ -50,7 +50,8 @@ class AuthService {
     }
 
     getUserInfo(){
-        return JSON.parse(sessionStorage.getItem(SESSION_ID)).user;
+        const session =  JSON.parse(sessionStorage.getItem(SESSION_ID));
+        return session ? session.user: null;
     }
 
     getAuthHeader() {

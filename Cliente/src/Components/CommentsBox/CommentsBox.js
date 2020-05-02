@@ -1,7 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './CommentsBox.css';
-import ReactionBar from '../ReactionBar/ReactionBar';
 export default function PostsBox() {
 
     return (

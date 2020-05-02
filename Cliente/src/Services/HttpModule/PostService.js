@@ -4,8 +4,7 @@ import AuthService from '../AuthService';
 const API_BASE_URL = 'http://localhost:8080';
 
 class PostService {
-    
-    
+
     getPost(){
         let header  = AuthService.getAuthHeader();
         return axios.get(API_BASE_URL+'/posts', header)
