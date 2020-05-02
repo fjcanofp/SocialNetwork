@@ -31,7 +31,7 @@ exports.findPostByID = function (ctx , id) {
 exports.getAllPosts = function (ctx , user) {
     logger('debug', ctx , __filename , 'Listing post');
     return new Promise((resolve, reject) => {
-        PostsModel.find({})
+        PostsModel.find({}).sort({post_time : -1 })
             .then((posts) => {
                 logger('info', ctx , __filename , 'post has been found ');
                 resolve(posts)
