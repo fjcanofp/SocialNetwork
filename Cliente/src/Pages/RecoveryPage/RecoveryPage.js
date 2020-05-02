@@ -16,7 +16,10 @@ export default function RecoveryPage() {
 
     const makeRecovery = (evt) => {
         evt.preventDefault();
-
+        if(password != passwordBis){
+            setRequestState({ type : AlertTypes.WARN , messages : 'password do not match'})
+            return
+        }
         RecoverService.doRecovery({ login : email, password :  password , recoveryID: secureID })
         .then(()=>{
             setRequestState({type : AlertTypes.SUCCESS , messages : 'your password has been successfully reset'})

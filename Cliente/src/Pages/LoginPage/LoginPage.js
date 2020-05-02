@@ -1,12 +1,14 @@
 import React, {useState} from 'react';
 import {useHistory, Link} from "react-router-dom";
 import AuthService from '../../Services/AuthService';
+import  Alert , { AlertTypes }  from '../../Components/Alert/Alert'
 import './LoginPage.css';
 
 export default function Login() {
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [reqState, setRequestState] = useState( {} );
+
     const history = useHistory();
 
     const handleSubmit = (evt) => {
@@ -16,7 +18,7 @@ export default function Login() {
             password: password
         })
             .then( () => history.push("/home") )
-            .catch(error =>  setError(error) )
+            .catch(error => setRequestState({type : AlertTypes.ERROR , messages : 'Invalid Credentials'}))
     };
 
     return (
@@ -24,7 +26,7 @@ export default function Login() {
             <div id="logreg-forms">
                 <span id="logo"><span id="logo-bask">Baskt</span><span id="logo-book">book</span></span>
                 <form className="form-signin" onSubmit={handleSubmit}>
-                    {error ? (<div className="alert alert-danger" role="alert">Invalid Credentials</div>) : (<></>)}
+                <Alert type={ reqState.type } messages={ reqState.messages }/>
                     <input type="email" id="inputEmail" className="form-control" placeholder="Email address"
                            required
                            autoFocus="" value={user} onChange={(evt) => {

@@ -1,13 +1,14 @@
 import React, {useState} from 'react';
 import {useHistory, Link} from "react-router-dom";
 import AuthService from '../../Services/AuthService';
+import  Alert , { AlertTypes }  from '../../Components/Alert/Alert'
 
 export default function Register() {
 
     const [user, setUser] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [reqState, setRequestState] = useState( {} );
     const history = useHistory();
 
     const handleSubmit = (evt) => {
@@ -21,7 +22,7 @@ export default function Register() {
                 history.push("/home");
             })
             .catch(error => {
-                setError(error);
+                setRequestState({type : AlertTypes.ERROR , messages : 'Registration error'})
             })
     }
 
@@ -30,7 +31,7 @@ export default function Register() {
             <div id="logreg-forms">
                 <span id="logo"><span id="logo-bask">Baskt</span><span id="logo-book">book</span></span>
                 <form className="form-signin" onSubmit={handleSubmit}>
-                    {error ? (<div className="alert alert-danger" role="alert">Registration error</div>) : (<></>)}
+                <Alert type={ reqState.type } messages={ reqState.messages }/>
                     <input type="text" id="inputName" className="form-control" placeholder="Name" required
                            autoFocus="" value={name} onChange={(evt) => {
                         setName(evt.target.value)
