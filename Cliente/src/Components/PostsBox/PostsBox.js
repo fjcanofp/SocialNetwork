@@ -39,7 +39,7 @@ export default function PostsBox({ postID , title , user , post_time }) {
     },[])
 
     return (
-        <div className="container col-7">
+        <div className="container col-7 mb-4">
             <div className="row">
                 <div className="detailBox border col-12">
                     <div className="titleBox">
