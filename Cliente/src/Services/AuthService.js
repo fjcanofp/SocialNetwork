@@ -55,7 +55,7 @@ class AuthService {
     }
 
     getAuthHeader() {
-       return { "headers": {"Authorization": 'Bearer ' + this.getUserInfo().token }};
+       return { "headers": {"Authorization": 'Bearer ' + JSON.parse(sessionStorage.getItem(SESSION_ID)).token }};
     }
 
     logOut() {

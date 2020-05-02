@@ -30,9 +30,21 @@ schemaPosts.pre('find', function () {
 schemaPosts.pre('find', function () {
     this.populate('user', '_id name');
 });
-
-schemaPosts.pre('find',function(){
+schemaPosts.pre('find', function () {
     this.populate('reactions');
+});
+schemaPosts.pre('find', function () {
+    this.populate('comments');
+});
+
+schemaPosts.pre('findOne', function () {
+    this.populate('user', '_id name');
+});
+schemaPosts.pre('findOne', function () {
+    this.populate('reactions');
+});
+schemaPosts.pre('findOne', function () {
+    this.populate('user', '_id name');
 });
 
 exports.PostsModel = mongoose.model(process.env.DB_POSTS_COLLECTION, schemaPosts);

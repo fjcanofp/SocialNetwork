@@ -6,13 +6,16 @@ import PostsBox from "../../Components/PostsBox/PostsBox";
 
 
 export default function Home() {
-
+    let user = {
+        _id:"patata",
+        name:"Chorizo"
+    }
     return (
         <div className="container-fluid">
             <NavHeader/>
             <main className="row col-12 align-top justify-content-center">
                 <CreatePost/>
-                <PostsBox />
+                <PostsBox postID="5ead99599bc4c30ec4a55aab"/>
             </main>
         </div>
     )

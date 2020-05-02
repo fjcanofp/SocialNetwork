@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 exports.findPostByID = function (ctx , id) {
     logger('debug', ctx ,__filename, 'Searching post ' + id);
     return new Promise((resolve, reject) => {
-        PostsModel.findById(id)
+        PostsModel.findOne({ _id : id })
             .then((post) => {
                 if (!post) {
                     logger('info', ctx ,__filename, 'no post with id ' + id);
