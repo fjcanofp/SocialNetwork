@@ -159,7 +159,7 @@ router.post('/recovery', (req, res)=>{
                 .send();
     })
     .catch(error=>{
-        logger('error',req.id,__filename,"Error deleting user with id "+id)
+        logger('error',req.id,__filename,"Error deleting user with id ")
         return res.status(error.code).end(error.messages);
     })
     .finally(()=>{
