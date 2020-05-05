@@ -1,63 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import PostsBox from '../../Components/PostsBox/PostsBox';
-import CreatePost from '../../Components/CreatePost/CreatePost';
+import React, {useState} from 'react';
+import {Link} from 'react-router-dom';
 import './ProfilePage.css';
+import NavHeader from "../../Components/NavHeader/NavHeader";
+import AuthService from "../../Services/AuthService";
 
 export default function ProfilePage() {
-    const [isData, setisData] = useState(false);
-    let { id } = useParams();
 
+    const [filePreview, setFilePreview] = useState("http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
+    const isImagen = (mimetype) => {
+        return ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp'].includes(mimetype);
+    }
+    const User = AuthService.getUserInfo();
+    const avatar = (evt) => {
+        if (!evt.target.files[0]) {
+            return
+        }
 
-    return <div className="container">
-        <div className="row profile">
-            <div className="col-md-3 mb-4">
-                <div className="profile-sidebar">
-                    <div className="profile-userpic text-center">
-                        <img src="https://image.shutterstock.com/image-illustration/very-big-size-man-without-260nw-126920099.jpg" className="img-responsive" alt="" />
+        if (isImagen(evt.target.files[0].type)) {
+            setFilePreview(URL.createObjectURL(evt.target.files[0]))
+        } else {
+            //Error
+        }
+    }
+
+    return (
+        <div className="container-fluid">
+            <NavHeader/>
+
+            <div className="row ">
+                <div className="col-sm-3">
+                    <div className="text-center">
+                        <img src={filePreview}
+                             className="avatar thumbnail rounded-circle img-thumbnail" alt="avatar"/>
+                        <h6>Upload a different photo...</h6>
+                        <input type="file" className="text-center center-block file-upload" onChange={(evt) => avatar(evt)}/>
                     </div>
-                    <div className="profile-usertitle">
-                        <div className="profile-usertitle-name">
-                            Jhon Doe
-					</div>
-                        <div className="profile-usertitle-job">
-                            Developer
-					</div>
-                    </div>
-                    <div className="profile-userbuttons col-12">
-                        <button type="button" className="btn btn-success btn-sm col-12">Follow</button>
-                        <button type="button" className="btn btn-danger btn-sm col-12">Message</button>
-                    </div>
-                </div>
-                <br />
-                <div className="profile-sidebar m-0">
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Posts
-                            <span class="badge badge-primary badge-pill">14</span>
+                    <br/>
+                    <ul className="list-group">
+                        <li className="list-group-item list-group-item-warning text-muted h4"><i
+                            className="fas fa-poll fa-2x mr-2 text-warning"/>Activity
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Follow
-                            <span class="badge badge-primary badge-pill">2</span>
+                        <li className="list-group-item list-group-item-action text-right"><span
+                            className="pull-left"><strong>Posts</strong></span>
+                            <span className="badge badge-primary badge-pill">125</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Followers
-                            <span class="badge badge-primary badge-pill">1</span>
+                        <li className="list-group-item list-group-item-action text-right"><span
+                            className="pull-left"><strong>Shares</strong></span>
+                            <span className="badge badge-primary badge-pill">13</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Team
-                            <span class="badge badge-primary badge-pill">1</span>
+                        <li className="list-group-item text-right"><span
+                            className="pull-left"><strong>Likes</strong></span>
+                            <span className="badge badge-primary badge-pill">37</span>
+                        </li>
+                        <li className="list-group-item text-right"><span
+                            className="pull-left"><strong>Friends</strong></span>
+                            <span className="badge badge-primary badge-pill">74</span>
                         </li>
                     </ul>
                 </div>
-            </div>
-            <div className="col-md-9">
-                <div className="profile-content">
-                    <CreatePost />
-                    <hr />
-                    <PostsBox />
+
+                <div className="col-sm-9" style={{marginTop: "auto"}}>
+                    <form className="form" action="#" method="post" id="registrationForm">
+                        <div className="form-group">
+
+                            <div className="col-xs-6">
+                                <label htmlFor="first_name"><h4>First name</h4></label>
+                                <input type="text" className="form-control" name="first_name" id="first_name"
+                                       placeholder="first name" title="enter your first name if any." required/>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <div className="col-xs-6">
+                                <label htmlFor="last_name"><h4>Last name</h4></label>
+                                <input type="text" className="form-control" name="last_name" id="last_name"
+                                       placeholder="last name" title="enter your last name if any." required/>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+
+                            <div className="col-xs-6">
+                                <label htmlFor="mobile"><h4>Mobile</h4></label>
+                                <input type="text" className="form-control" name="mobile" id="mobile"
+                                       placeholder="+34 XXX XX XX XX" title="enter your mobile number if any."/>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="col-xs-6">
+                                <label htmlFor="birthday"><h4>Birthday</h4></label>
+                                <input type="date" className="form-control" name="birthday" id="birthday"
+                                       placeholder="dd/mm/yyyy" title="enter your date of birthday."/>
+                            </div>
+                        </div>
+                        <div className="form-group">
+
+                            <div className="col-xs-6">
+                                <label htmlFor="email"><h4>Email</h4></label>
+                                <input type="email" className="form-control" name="email" id="email"
+                                       placeholder="you@email.com" title="enter your email."/>
+                            </div>
+                        </div>
+                        <div className="form-group">
+
+                            <div className="col-xs-6">
+                                <label htmlFor="email"><h4>Location</h4></label>
+                                <input type="email" className="form-control" id="location" placeholder="somewhere"
+                                       title="enter a location"/>
+                            </div>
+                        </div>
+                        <div className="form-group">
+
+                            <div className="col-xs-6">
+                                <label htmlFor="password"><h4>Password</h4></label>
+                                <input type="password" className="form-control" name="password" id="password"
+                                       placeholder="password" title="enter your password."/>
+                            </div>
+                        </div>
+                        <div className="form-group">
+
+                            <div className="col-xs-6">
+                                <label htmlFor="password2"><h4>Repeat password</h4></label>
+                                <input type="password" className="form-control" name="password2" id="password2"
+                                       placeholder="repeat password"
+                                       title="enter your password again in order to verify."/>
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <div className="col-xs-12">
+                                <br/>
+                                <button className="btn btn-lg btn-warning" type="submit"><i
+                                    className="glyphicon glyphicon-ok-sign"/>Save
+                                </button>
+                                <button className="btn btn-lg btn-danger ml-3" type="reset"><i
+                                    className="glyphicon glyphicon-repeat"/> Reset
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr/>
+
                 </div>
             </div>
         </div>
-    </div>;
+    );
 }
+
+
