@@ -1,16 +1,22 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link} from 'react-router-dom';
 import './ProfilePage.css';
 import NavHeader from "../../Components/NavHeader/NavHeader";
 import AuthService from "../../Services/AuthService";
+import PostsBox from "../../Components/PostsBox/PostsBox";
+import PostService from "../../Services/HttpModule/PostService";
 
 export default function ProfilePage() {
+
+    const User = AuthService.getUserInfo();
+    const idProfile = window.location.pathname.split('/')[2];
+    const samePerson = User._id === idProfile;
 
     const [filePreview, setFilePreview] = useState("http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
     const isImagen = (mimetype) => {
         return ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp'].includes(mimetype);
     }
-    const User = AuthService.getUserInfo();
+
     const avatar = (evt) => {
         if (!evt.target.files[0]) {
             return
@@ -23,17 +29,34 @@ export default function ProfilePage() {
         }
     }
 
+    const [posts, setPosts] = useState([]);
+    useEffect(() => {
+        PostService.getPost()
+            .then(posts => {
+                setPosts(posts)
+            })
+            .catch(() => {
+                //error
+            })
+    }, [posts])
+
     return (
         <div className="container-fluid">
             <NavHeader/>
 
             <div className="row ">
-                <div className="col-sm-3">
+                <div className="col-sm-3 align-items-center">
                     <div className="text-center">
                         <img src={filePreview}
                              className="avatar thumbnail rounded-circle img-thumbnail" alt="avatar"/>
-                        <h6>Upload a different photo...</h6>
-                        <input type="file" className="text-center center-block file-upload" onChange={(evt) => avatar(evt)}/>
+                        {!samePerson ? <></> : (
+                            <>
+                                <h6>Upload a different photo...</h6>
+                                <input type="file" className="text-center center-block file-upload"
+                                       onChange={(evt) => avatar(evt)}/>
+                            </>
+                        )}
+
                     </div>
                     <br/>
                     <ul className="list-group">
@@ -60,6 +83,14 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="col-sm-9" style={{marginTop: "auto"}}>
+                    {!samePerson ? (
+                        <>
+                            {posts.map((cur_post) => {
+                                return (<PostsBox key={cur_post._id} postID={cur_post._id} title={cur_post.title}
+                                                  user={cur_post.user} post_time={cur_post.post_time}/>)
+                            })}
+                        </>
+                    ) :(
                     <form className="form" action="#" method="post" id="registrationForm">
                         <div className="form-group">
 
@@ -137,7 +168,7 @@ export default function ProfilePage() {
                                 </button>
                             </div>
                         </div>
-                    </form>
+                    </form>)}
 
                     <hr/>
 
