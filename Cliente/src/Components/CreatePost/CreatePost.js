@@ -19,6 +19,7 @@ export default function CreatePost() {
             reader.onloadend = evt => {
                 setFilePreview(reader.result)
             } */
+            console.log(evt.target.files[0])
             setFilePreview(URL.createObjectURL(evt.target.files[0]))
             setPostMedia(evt.target.files[0])
         }
@@ -42,7 +43,10 @@ export default function CreatePost() {
     }
 
     const doPost = () => {
-        PostService.doPost({ "title": postText })
+        let formData = new FormData();
+        formData.set('media',postMedia);
+        formData.set('title',postText);
+        PostService.doPost( formData )
             .then(response => {
                 alert(response)
             })

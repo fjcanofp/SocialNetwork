@@ -1,6 +1,5 @@
 let express = require("express")
 let http = require("http")
-let mailer = require('./utils/mailer')
 let db_util = require("./utils/db_connection")
 
 let dotenv = require('dotenv');

@@ -46,6 +46,10 @@ class PostService {
         return axios.post( API_BASE_URL+'/posts', post , header)
     }
 
+    delete(id){
+        let header  = AuthService.getAuthHeader();
+        return axios.delete( API_BASE_URL+'/posts/'+id, header)
+    }
 }
 
 export default new PostService();

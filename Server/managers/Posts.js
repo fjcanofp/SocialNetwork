@@ -1,11 +1,13 @@
 const logger = require('../utils/LoggerService');
 const PostsModel = require('../entity/PostsModel').PostsModel;
 const mongoose = require('mongoose');
+let FileService = require('../utils/FileService');
 
 exports.findPostByID = function (ctx , id) {
+    let post_end = {};
     logger('debug', ctx ,__filename, 'Searching post ' + id);
     return new Promise((resolve, reject) => {
-        PostsModel.findOne({ _id : id })
+        PostsModel.findOne({ _id : id }).populate('media').exec()
             .then((post) => {
                 if (!post) {
                     logger('info', ctx ,__filename, 'no post with id ' + id);
@@ -13,11 +15,15 @@ exports.findPostByID = function (ctx , id) {
                         code: 400,
                         messages: "Not Found"
                     })
-                    
                 }
+                post_end = post.toObject();
                 logger('info', ctx ,__filename, 'Post with id  ' + id + " found");
-                resolve(post)
+                resolve(post_end)
+                //return FileService.getFile(post.media)
             })
+            //.then((chunks)=>{
+                //    post_end.media.srs = chunks;
+            //})
             .catch((error) => {
                 logger('error', ctx ,__filename, error);
                 if (error instanceof mongoose.Error.ValidationError) {
@@ -31,7 +37,7 @@ exports.findPostByID = function (ctx , id) {
 exports.getAllPosts = function (ctx , user) {
     logger('debug', ctx , __filename , 'Listing post');
     return new Promise((resolve, reject) => {
-        PostsModel.find({}).sort({post_time : -1 })
+        PostsModel.find({}).sort({post_time : -1 }).populate('media')
             .then((posts) => {
                 logger('info', ctx , __filename , 'post has been found ');
                 resolve(posts)
@@ -112,8 +118,11 @@ exports.deletePosts = function (ctx , id) {
             })
         }
 
-        PostsModel.deleteOne({_id: id})
-            .then(() => {
+        PostsModel.findByIdAndDelete({_id: id})
+            .then((post) => {
+                return FileService.deleteFile(post.media)
+            })
+            .then(()=>{
                 logger('info', ctx, __filename, 'New post has been deleted id:' + id);
                 resolve({
                     code: 200,

@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let security = require('../utils/security');
+let FileService = require('../utils/FileService')
 let postsManager = require('../managers/Posts');
 const logger = require('../utils/LoggerService');
 //====================================//
@@ -35,6 +36,7 @@ router.get('/posts/:id',(req ,res)=>{
     let id = req.params.id;
     postsManager.findPostByID(req.id , id)
     .then((posts)=>{
+        console.log(posts)
         return res.status(200).json(posts);
     })
     .catch( error =>{
@@ -53,24 +55,32 @@ router.post('/posts', ( req , res )=>{
     logger('info',req.id,__filename,"Start: Creating post")
     let user = req.user;
     let post = req.body;
+    let files = req.files[0];
+
     if(!user || !post){
         return res.status(400).end("Bad Request")
     }
-
     post.user = user._id;
+    if(files){
+        FileService.uploadFile(files)
+        .then(( file )=>{
+            post.media = file
+            return postsManager.createNewPosts(req.id , post)
+        })
+        .then((newPost)=>{
+            logger('debug',req.id,__filename,"Posts has been created")
+            return res.status(201).json(newPost);
+        })
+        .catch( error =>{
+            logger('debug', req.id , __filename, error.messages)
+            return res.status(error.code).end(error.messages)
+        })
+        .finally(()=>{
+            logger('info',req.id,__filename,"End: Creating post")
+        })
 
-    postsManager.createNewPosts(req.id , post)
-    .then((newPost)=>{
-        logger('debug',req.id,__filename,"Posts has been created")
-        return res.status(201).json(newPost);
-    })
-    .catch( error =>{
-        logger('debug', req.id , __filename, error.messages)
-        return res.status(error.code).end(error.messages)
-    })
-    .finally(()=>{
-        logger('info',req.id,__filename,"End: Creating post")
-    })
+    }
+
 })
 
 /**

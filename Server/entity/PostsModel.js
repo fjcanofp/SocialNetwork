@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+var GFS = mongoose.model("GFS", new Schema({}, {strict: false}), "fs.files" );
+
 const schemaPosts = new Schema({
     //_id : ObjectId
     user: {
@@ -21,7 +23,11 @@ const schemaPosts = new Schema({
         ref: process.env.DB_REACTIONS_COLLECTION,
     }],
     title: String,
-    media: String,
+    media: {
+        type: Schema.Types.ObjectId,
+        ref: 'GFS',
+    },
+    mediasrc : String
 });
 
 schemaPosts.pre('find', function () {
