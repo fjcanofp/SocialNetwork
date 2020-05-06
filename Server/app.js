@@ -11,6 +11,7 @@ let routerPosts = require('./router/routerPosts').postsRouter;
 let routerComment = require('./router/routerComments').commentsRouter;
 let routerEvents = require('./router/routerEvents').eventsRouter;
 let routerReaction = require('./router/routerReactions').reactionRouter;
+let routerFollower = require('./router/routerFollowers').routerFollow;
 
 let logger = require('./utils/LoggerService')
 
@@ -33,6 +34,7 @@ function arrancarServidor(){
     app.use(routerComment);
     app.use(routerEvents);
     app.use(routerReaction);
+    app.use(routerFollower);
 
     app.use((err, req, res, next)=>{
         logger('error','SERVER',__filename,err.stack);

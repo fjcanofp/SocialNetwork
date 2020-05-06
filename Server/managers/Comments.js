@@ -127,7 +127,6 @@ exports.updateCommentsDependenciesAtDelete = function( commentDeleted ){
         //FIN //LOGER HERE
     })
     .catch((error)=>{
-        console.log(error)
     })
 }
 exports.updatePostsDependenciesAtDelete = function( commentDeleted ){   

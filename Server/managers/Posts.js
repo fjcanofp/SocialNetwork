@@ -3,6 +3,25 @@ const PostsModel = require('../entity/PostsModel').PostsModel;
 const mongoose = require('mongoose');
 let FileService = require('../utils/FileService');
 
+
+exports.getPostOfUserByID = function( ctx , id ){
+    logger('debug', ctx ,__filename, 'Searching post ' + id);
+    return new Promise((resolve, reject) => {
+        PostsModel.find({ user : id }).sort({post_time : -1 })
+        .then(posts=>{
+            logger('debug', ctx ,__filename, 'Searching post');
+            resolve(posts);
+        })
+        .catch( error=>{
+            logger('error', ctx ,__filename, error);
+                if (error instanceof mongoose.Error) {
+                    reject({code: 400, messages: 'Bad Request'})
+                }
+                reject({code: 500, messages: 'Internal sever Error'})
+        })
+    })  
+} 
+
 exports.findPostByID = function (ctx , id) {
     let post_end = {};
     logger('debug', ctx ,__filename, 'Searching post ' + id);

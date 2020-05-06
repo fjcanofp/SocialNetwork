@@ -34,7 +34,6 @@ exports.sendMailRecoveryPassword = (receiverEmail, receiverName , recoveryID ) =
 
 const renderEmail = (username, url , recoveryID ) => {
     let email = fs.readFileSync('templates/recoveryPassword/recoveryPassword.html', (err, data) => {
-        console.log(data)
         return data.toString();
     }).toString();
     email = email.replace('{{URL}}', url);

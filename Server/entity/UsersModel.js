@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+let Schema = mongoose.Schema;
 const schemaUsers = mongoose.Schema({
     //_id : ObjectId
     login: {
@@ -13,7 +13,17 @@ const schemaUsers = mongoose.Schema({
         minlength: 5
     },
     name: String,
-    avatar : String,
+    avatar :{
+        type: Schema.Types.ObjectId,
+        ref: 'GFS',
+    },
+    stadistics : {
+        type: Schema.Types.Mixed,
+    },
+    follows : [{
+        type: Schema.Types.ObjectId,
+        ref: process.env.DB_USER_COLLECTION
+    }],
     recoveryID : String
 });
 

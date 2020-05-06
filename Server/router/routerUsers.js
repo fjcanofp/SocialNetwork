@@ -5,6 +5,8 @@ const bcrypt = require('bcrypt');
 let userManager = require('../managers/Users')
 let User = require('../entity/UsersModel').UsersModel;
 let logger = require('../utils/LoggerService');
+let FileService = require('../utils/FileService')
+
 //====================================//
 //             Users API              //
 //====================================//
@@ -36,7 +38,7 @@ router.post('/register',  (req, res) => {
 
             const token = jwt.sign(userForToken, process.env.SECRET);
 
-            return res.status(201).send({ token , user: user });
+            return res.status(201).send({ token , user: createdUser });
         })
         .catch(error => {
             logger('error', req.id, __filename, 'Error : ' + error.messages);
@@ -57,12 +59,23 @@ router.put('/user/:id', (req, res) => {
     let user = req.body;
     let id = req.params.id;
     user._id = id;
+    let files = req.files[0];
 
     if (id != req.user._id) {
         logger('warn', req.id, __filename, '401 unauthorized');
         return res.status(401).json({ code: '400', message: 'Bad Request' })
     }
-
+    
+    if(file){
+        FileService.uploadFile(files)
+        .then( file =>{
+            logger('debug', req.id, __filename, 'Profile photo uploaded');
+            user.avatar = file;
+        })
+        .catch(error=>{
+            logger('error', req.id, __filename, error);
+        })
+    }
 
     userManager.modifyUser(req.id , user)
         .then((user) => {
@@ -111,10 +124,13 @@ router.get('/user/:id', (req, res) => {
 
     userManager.findUserById(req.id, id)
         .then((user) => {
+            return userManager.getStadistics(user)
+        })
+        .then(( user )=>{
             return res.status(200).json(user);
         })
         .catch(error => {
-            return res.status(error.code).end(error.messages);
+            return res.status(404).end('Bad Request');
         })
 });
 

@@ -13,14 +13,14 @@ const mailer = require('../utils/mailer')
 exports.searchUser = function (ctx, login, password) {
     logger('info', ctx ,__filename , 'Looking for Authenticate');
     return new Promise(function (resolve, reject) {
-        userModel.findOne({login: login, password: password})
+        userModel.findOne({login: login, password: password}).populate('avatar').exec()
             .then(user => {
                 if (!user) {
                     logger('warn', ctx, __filename , 'User not found');
                     reject({code: 400, messages: 'Not found'});
                     return
                 }
-                resolve(user)
+                resolve(user)  
             })
             .catch(error => {
                 logger('error', ctx, __filename , error);
@@ -96,7 +96,7 @@ exports.modifyUser = function (ctx , user) {
 
 exports.findUserById = function (ctx, id) {
     return new Promise((resolve, reject) => {
-        userModel.findById(id)
+        userModel.findById(id).populate('avatar').exec()
             .then((user) => {
                 if (!user) {
                     logger('info', ctx, __filename, 'User has not been find by id ' + id);
@@ -185,3 +185,22 @@ exports.makeRecovery = (ctx , r_user  ) => {
         })
     })
 }
+let postManager = require('../entity/PostsModel').PostsModel
+let followersManager = require('./Follow')
+exports.getStadistics = ( user =>{
+    let objuser = user
+    return new Promise((resolve, reject) => {
+        postManager.find({ user : user._id }).countDocuments()
+        .then( count =>{
+            objuser.stadistics = { 'totalPost' : count};
+            return followersManager.getFollower(null , objuser)
+        })
+        .then(foll=>{
+            objuser.stadistics = {'totalFollowers': foll.length}
+            resolve(objuser)
+        })
+        .catch(error=>{
+            reject(error)
+        })
+    })
+})

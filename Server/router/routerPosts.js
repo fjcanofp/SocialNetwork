@@ -36,7 +36,6 @@ router.get('/posts/:id',(req ,res)=>{
     let id = req.params.id;
     postsManager.findPostByID(req.id , id)
     .then((posts)=>{
-        console.log(posts)
         return res.status(200).json(posts);
     })
     .catch( error =>{
@@ -45,6 +44,25 @@ router.get('/posts/:id',(req ,res)=>{
     })
     .finally(()=>{
         logger('info',req.id,__filename,"End: Get posts by id");
+    })
+});
+
+/**
+ * Return all post of a user
+ */
+router.get('/user/:id/posts',(req ,res)=>{
+    logger('info',req.id,__filename,"Start: Get posts of user by id")
+    let id = req.params.id;
+    postsManager.findPostByID(req.id , id)
+    .then((posts)=>{
+        return res.status(200).json(posts);
+    })
+    .catch( error =>{
+        logger('error',req.id,__filename,"Error retriving post")
+        return res.status(error.code).end(error.messages);
+    })
+    .finally(()=>{
+        logger('info',req.id,__filename,"End: Get posts of user by id");
     })
 });
 
@@ -78,7 +96,20 @@ router.post('/posts', ( req , res )=>{
         .finally(()=>{
             logger('info',req.id,__filename,"End: Creating post")
         })
-
+    }
+    else{
+        postsManager.createNewPosts(req.id , post)
+        .then((newPost)=>{
+            logger('debug',req.id,__filename,"Posts has been created")
+            return res.status(201).json(newPost);
+        })
+        .catch( error =>{
+            logger('debug', req.id , __filename, error.messages)
+            return res.status(error.code).end(error.messages)
+        })
+        .finally(()=>{
+            logger('info',req.id,__filename,"End: Creating post")
+        })
     }
 
 })
