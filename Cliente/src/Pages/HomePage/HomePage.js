@@ -29,7 +29,6 @@ export default function Home() {
             <NavHeader/>
             <main className="row col-12 align-top justify-content-center">
                 <CreatePost/>
-                
                 { posts.map(( cur_post , index)=>{return (<PostsBox key={cur_post._id} postID={cur_post._id}  />) }) }
             </main>
         </div>

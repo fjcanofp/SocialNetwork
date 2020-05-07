@@ -7,7 +7,7 @@ import ModalConfirmation from "../Modal/ModalConfirmation";
 export default function NavHeader() {
 
     const User = AuthService.getUserInfo();
-    const avatar = 'https://clipartart.com/images/free-basketball-vector-clipart.jpg';
+    const avatar = 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
 
     return (
         <>
@@ -15,13 +15,13 @@ export default function NavHeader() {
             <div className="row">
                 <nav className="col-12 navbar sticky-top navbar-dark bg-dark">
                     <div className="col-2">
-                        <Link className="navbar-brand ml-lg-3" to={"/profile/" + User._id}>
+                        <Link className="navbar-brand col-3" to={"/profile/" + User._id}>
                             <img id="avatar" alt="" style={{backgroundImage: `url(${avatar})`}}/>
                             {User.name}
                         </Link>
                     </div>
                     <div className="col-3 offset-6">
-                        <form className="float-right form-inline col-12">
+                        <form className="float-right form-inline ">
                             <input className="form-control mr-sm-2" type="search" placeholder="Search"
                                    aria-label="Search"/>
                             <button className="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>

@@ -1,6 +1,6 @@
 import React from 'react';
 import './CommentsBox.css';
-export default function PostsBox() {
+export default function CommentBox() {
 
     return (
         <div className="actionBox">

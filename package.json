@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/GeroAlv-Alex/SocialNetwork#readme",
   "dependencies": {
-    "concurrently": "^5.2.0"
+    "bootstrap": "^4.4.1",
+    "concurrently": "^5.2.0",
+    "react-bootstrap": "^1.0.1"
   }
 }

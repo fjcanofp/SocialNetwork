@@ -6,7 +6,7 @@ const API_BASE_URL = 'http://localhost:8080';
 class PostService {
 
     getPostbyID( id ){
-        let header  = AuthService.getAuthHeader();
+        const header  = AuthService.getAuthHeader();
         return new Promise((resolve , reject )=>{
             axios.get(API_BASE_URL+'/posts/'+id , header)
             .then(request=>{
@@ -24,7 +24,7 @@ class PostService {
     }
 
     getPost(){
-        let header  = AuthService.getAuthHeader();
+        const header  = AuthService.getAuthHeader();
         return new Promise((resolve , reject )=>{
             axios.get(API_BASE_URL+'/posts', header)
             .then(request=>{
@@ -42,8 +42,19 @@ class PostService {
     }
         
     doPost( post ){
-        let header  = AuthService.getAuthHeader();
-        return axios.post( API_BASE_URL+'/posts', post , header)
+        const header  = AuthService.getAuthHeader();
+        return new Promise((resolve , reject )=>{
+            axios.post(API_BASE_URL+'/posts', post , header)
+                .then(request=>{
+                    if(!request.data){
+                        reject("No data");
+                    }
+                    resolve(request.data)
+                })
+                .catch(error=>{
+                    reject(error);
+                })
+        })
     }
 
     delete(id){

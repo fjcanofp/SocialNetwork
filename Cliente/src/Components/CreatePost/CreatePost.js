@@ -79,7 +79,7 @@ export default function CreatePost() {
                     <div className="row">
                         <div className="form-group col-12">
                             <button className="col-2 btn btn-default" onClick={() => { document.getElementById('file').click() }}>
-                                <i className="fa fa-file-image-o"></i>
+                                <i className="fa fa-file-image-o"/>
                                 <input id="file" type="file" className="d-none custom-file-input" onChange={(evt) => { previeFile(evt); }} />
                             </button>
                             <button onClick={doPost} className="btn btn-default col-10 text-center">Post</button>
