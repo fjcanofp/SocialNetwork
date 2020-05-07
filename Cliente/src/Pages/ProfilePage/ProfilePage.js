@@ -1,26 +1,38 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from 'react-router-dom';
 import './ProfilePage.css';
 import NavHeader from "../../Components/NavHeader/NavHeader";
 import AuthService from "../../Services/AuthService";
 import PostsBox from "../../Components/PostsBox/PostsBox";
 import PostService from "../../Services/HttpModule/PostService";
+import UsersService from "../../Services/HttpModule/UsersService";
+import {useParams} from "react-router-dom";
 
 export default function ProfilePage() {
 
-    const User = AuthService.getUserInfo();
-    const idProfile = window.location.pathname.split('/')[2];
-    const samePerson = User._id === idProfile;
+    const {id} = useParams();
+    const userInfo = AuthService.getUserInfo();
+    const samePerson = userInfo._id === id;
 
-    //Inputs form
-    const [userName, setUserName] = useState(User.name);
-    const [lastName, setLastName] = useState(User.lastName);
-    const [mobile, setMobile] = useState(User.mobile);
-    const [birthday, setBirthday] = useState(User.birthday);
-    const [email, setEmail] = useState(User.login);
-    const [location, setLocation] = useState(User.location);
+    const User = {
+        name: userInfo.name || '',
+        lastName: userInfo.lastName || '',
+        mobile: userInfo.mobile || '',
+        birthday: userInfo.birthday || '',
+        email: userInfo.login || '',
+        location: userInfo.location || '',
+        password: '',
+        password2: ''
+    };
+    const [userEdited, setUserEdited] = useState(User);
 
-    const [filePreview, setFilePreview] = useState(User.avatar ? User.avatar : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
+    const handleInput = (event) => {
+        setUserEdited({
+            ...userEdited,
+            [event.target.name]: event.target.value
+        });
+    }
+
+    const [filePreview, setFilePreview] = useState(userInfo.avatar ? userInfo.avatar : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
 
     const isImagen = (mimetype) => {
         return ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp'].includes(mimetype);
@@ -40,7 +52,7 @@ export default function ProfilePage() {
 
     const [posts, setPosts] = useState([]);
     useEffect(() => {
-        PostService.getPostbyID(idProfile)
+        PostService.getUserPosts(id)
             .then(posts => {
                 setPosts(posts)
             })
@@ -52,34 +64,30 @@ export default function ProfilePage() {
     function editUser(evt) {
         evt.preventDefault();
 
-        const editedUser = {};
-        const password2 = document.getElementById("password2").value;
-        for (const input of document.getElementsByTagName("input")) {
-           if(input.name === "first_name") editedUser.name = userName;
-           if(input.name === "last_name") editedUser.lastName = lastName;
-           if(input.name === "mobile") editedUser.mobile = mobile;
-           if(input.name === "birthday") editedUser.birthday = birthday;
-           if(input.name === "location") editedUser.location = location;
-           if(input.name === "password" && input.value !== "" && password2 === ""){
-               alert("Please write again your password in the next box");
-               return;
-           }
-           else if(input.name === "password" && input.value === "" && password2 !== ""){
-               alert("Please write again your password in the previous box");
-               return;
-           }
-           else if(input.name === "password" && input.value !== "" && password2 !== ""){
-                if(input.value === password2) editedUser.password = password2;
-                else{
-                    alert("Passwords do not mactch");
-                    return;
-                }
-           }
-
+        if (userEdited.password !== '' && userEdited.password2 === ''){
+            return;
+        }
+        if(userEdited.password2 !== '' && userEdited.password === ''){
+            return;
+        }
+        if(userEdited.password !== '' && userEdited.password2 !== ''){
+            delete userEdited.password2;
         }
 
-        editedUser.avatar = filePreview;
-        AuthService.setUserInfo(editedUser);
+        userEdited._id = userInfo._id;
+        userEdited.avatar = filePreview;
+        UsersService.modifyUser(userEdited)
+            .then((userModified) => {
+                AuthService.setUserInfo(userModified);
+            })
+            .catch((error) => {
+
+            })
+    }
+
+    function reset(evt) {
+        evt.preventDefault();
+        setUserEdited(User);
     }
 
     return (
@@ -133,23 +141,23 @@ export default function ProfilePage() {
                             })}
                         </>
                     ) : (
-                        <form className="form" onSubmit={editUser} method="post" id="registrationForm">
+                        <form className="form" onSubmit={editUser} onReset={reset} method="post" id="registrationForm">
                             <div className="form-group">
 
                                 <div className="col-xs-6">
                                     <label htmlFor="first_name"><h4>First name</h4></label>
-                                    <input type="text" className="form-control" name="first_name" id="first_name"
-                                           placeholder="first name" value={userName}
-                                           onChange={(evt) => setUserName(evt.target.value)}
+                                    <input type="text" className="form-control" name="name" id="first_name"
+                                           placeholder="first name" value={userEdited.name}
+                                           onChange={handleInput}
                                            title="enter your first name if any." required/>
                                 </div>
                             </div>
                             <div className="form-group">
                                 <div className="col-xs-6">
                                     <label htmlFor="last_name"><h4>Last name</h4></label>
-                                    <input type="text" className="form-control" name="last_name" id="last_name"
-                                           placeholder="last name" value={lastName}
-                                           onChange={(evt) => setLastName(evt.target.value)}
+                                    <input type="text" className="form-control" name="lastName" id="last_name"
+                                           placeholder="last name" value={userEdited.lastName}
+                                           onChange={handleInput}
                                            title="enter your last name if any."/>
                                 </div>
                             </div>
@@ -160,7 +168,7 @@ export default function ProfilePage() {
                                     <label htmlFor="mobile"><h4>Mobile</h4></label>
                                     <input type="tel" className="form-control" name="mobile" id="mobile"
                                            placeholder="666-77-88-99"
-                                           value={mobile} onChange={(evt) => setMobile(evt.target.value)}
+                                           value={userEdited.mobile} onChange={handleInput}
                                            title="enter your mobile number if any."/>
                                 </div>
                             </div>
@@ -170,7 +178,8 @@ export default function ProfilePage() {
                                     <label htmlFor="birthday"><h4>Birthday</h4></label>
                                     <input type="date" className="form-control" name="birthday" id="birthday"
                                            placeholder="dd/mm/yyyy" min="1940/01/01"
-                                           value={birthday} onChange={(evt) => setBirthday(evt.target.value)}
+                                           max={new Date().toISOString().split("T")[0]}
+                                           value={userEdited.birthday} onChange={handleInput}
                                            title="enter your date of birthday."/>
                                 </div>
                             </div>
@@ -179,18 +188,18 @@ export default function ProfilePage() {
                                 <div className="col-xs-6">
                                     <label htmlFor="email"><h4>Email</h4></label>
                                     <input type="email" className="form-control" name="email" id="email"
-                                           placeholder="you@email.com" value={email}
-                                           onChange={(evt) => setEmail(evt.target.value)}
+                                           placeholder={userEdited.email} value={userEdited.email}
+                                           onChange={handleInput}
                                            title="You cannot change the email." disabled/>
                                 </div>
                             </div>
                             <div className="form-group">
 
                                 <div className="col-xs-6">
-                                    <label htmlFor="email"><h4>Location</h4></label>
+                                    <label htmlFor="location"><h4>Location</h4></label>
                                     <input type="text" className="form-control" id="location" name="location"
                                            placeholder="somewhere"
-                                           value={location} onChange={(evt) => setLocation(evt.target.value)}
+                                           value={userEdited.location} onChange={handleInput}
                                            title="enter a location"/>
                                 </div>
                             </div>
@@ -199,7 +208,9 @@ export default function ProfilePage() {
                                 <div className="col-xs-6">
                                     <label htmlFor="password"><h4>Password</h4></label>
                                     <input type="password" className="form-control" name="password" id="password"
-                                           placeholder="new password" title="enter your password." autoComplete="off"/>
+                                           placeholder="new password" title="enter your password." autoComplete="off"
+                                           value={userEdited.password} onChange={handleInput}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group">
@@ -208,7 +219,9 @@ export default function ProfilePage() {
                                     <label htmlFor="password2"><h4>Repeat password</h4></label>
                                     <input type="password" className="form-control" name="password2" id="password2"
                                            placeholder="repeat new password"
-                                           title="enter your password again in order to verify." autoComplete="off"/>
+                                           title="enter your password again in order to verify." autoComplete="off"
+                                           value={userEdited.password2} onChange={handleInput}
+                                    />
                                 </div>
                             </div>
                             <div className="form-group">

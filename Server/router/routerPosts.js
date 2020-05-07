@@ -29,7 +29,7 @@ router.get('/posts',(req ,res)=>{
 });
 
 /**
- *  Retrive a posts by ID
+ *  Retrieve a posts by ID
  */
 router.get('/posts/:id',(req ,res)=>{
     logger('info',req.id,__filename,"Start: Get posts by id")
@@ -53,7 +53,7 @@ router.get('/posts/:id',(req ,res)=>{
 router.get('/user/:id/posts',(req ,res)=>{
     logger('info',req.id,__filename,"Start: Get posts of user by id")
     let id = req.params.id;
-    postsManager.findPostByID(req.id , id)
+    postsManager.getPostOfUserByID(req.id , id)
     .then((posts)=>{
         return res.status(200).json(posts);
     })

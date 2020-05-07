@@ -23,6 +23,24 @@ class PostService {
         }) 
     }
 
+    getUserPosts(idUser){
+        const header = AuthService.getAuthHeader();
+        return new Promise((resolve, reject) =>{
+            axios.get(`${API_BASE_URL}/user/${idUser}/posts`, header)
+                .then(request=>{
+
+                    if(!request.data){
+                        reject("No data");
+                    }
+
+                    resolve(request.data)
+                })
+                .catch(error=>{
+                    reject(error);
+                })
+        });
+    }
+
     getPost(){
         const header  = AuthService.getAuthHeader();
         return new Promise((resolve , reject )=>{
