@@ -185,6 +185,25 @@ exports.makeRecovery = (ctx , r_user  ) => {
         })
     })
 }
+
+exports.findUserWithRegex = (ctx , rgx )=>{
+    rgx = RegExp(`.*${rgx}.*`);
+    return new Promise((resolve, reject) => {
+        userModel.find({ $or: [ { login: { $regex:  rgx } }, { name: { $regex: rgx } } , { lastName: { $regex: rgx } }] })
+        .then((users)=>{
+            logger('debug', ctx, __filename, 'Users with regex');
+            resolve(users);
+        })
+        .catch(error=>{
+            logger('error', ctx, __filename, error);
+            if (error instanceof mongoose.Error) {
+                reject({code: 400, messages: 'Bad Request'})
+            }
+            reject({code: 500, messages: 'Internal Server Error'});
+        })
+    })
+}
+
 let postManager = require('../entity/PostsModel').PostsModel
 let followersManager = require('./Follow')
 exports.getStadistics = ( user =>{
