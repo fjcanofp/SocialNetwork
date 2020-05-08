@@ -71,7 +71,7 @@ export default function ProfilePage() {
 
     function editUser(evt) {
         evt.preventDefault();
-        document.getElementById('modalProfile').click();
+
 
         if (userEdited.password === '' && userEdited.password2 === ''){
             setRequestState({});
@@ -98,7 +98,7 @@ export default function ProfilePage() {
 
         userEdited._id = userInfo._id;
         userEdited.avatar = filePreview;
-
+        document.getElementById('modalProfile').click();
     }
 
     function reset(evt) {
