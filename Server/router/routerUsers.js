@@ -65,7 +65,20 @@ router.put('/user/:id', (req, res) => {
         logger('warn', req.id, __filename, '401 unauthorized');
         return res.status(401).json({ code: '400', message: 'Bad Request' })
     }
+
+    if(user.password){
+        const isPasswordChanged = user === null
+            ? false
+            : await bcrypt.compare(body.password, req.user.password);
     
+        if(isPasswordChanged){
+            const salt = bcrypt.genSaltSync(10);
+            const hash = bcrypt.hashSync(user.password, salt);
+            user.password = hash;
+        }
+    }
+
+
     if(file){
         FileService.uploadFile(files)
         .then( file =>{
