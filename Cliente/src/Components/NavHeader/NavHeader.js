@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import logOut from "../../Resources/img/log-out.svg";
 import React from "react";
 import AuthService from "../../Services/AuthService";
@@ -9,10 +9,19 @@ export default function NavHeader() {
 
     const User = AuthService.getUserInfo();
     const avatar = 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
+    const history = useHistory();
+
+    function handleModalNav () {
+        AuthService.logOut();
+        history.push("/");
+    }
 
     return (
         <>
-            <ModalConfirmation/>
+            <ModalConfirmation
+                messageBody={"You are about to exit BASKBOOT. Are you sure to exit?"}
+                handleClick={handleModalNav}
+            />
             <div className="row">
                 <nav className="col-12 navbar sticky-top navbar-dark bg-dark">
                     <div className="col-sm-1">

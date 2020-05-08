@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PostService from '../../Services/HttpModule/PostService'
 import ModalInformation from "../Modal/ModalInformation";
 import './CreatePost.css';
-export default function CreatePost() {
+export default function CreatePost( {onCreatePost}) {
 
     const [postText, setPostText] = useState("");
     const [postMedia, setPostMedia] = useState("");
@@ -14,12 +14,6 @@ export default function CreatePost() {
         }
 
         if (isImagen(evt.target.files[0].type)) {
-            /* const reader = new FileReader()
-            reader.readAsDataURL(evt.target.files[0])
-            reader.onloadend = evt => {
-                setFilePreview(reader.result)
-            } */
-            console.log(evt.target.files[0])
             setFilePreview(URL.createObjectURL(evt.target.files[0]))
             setPostMedia(evt.target.files[0])
         }
@@ -31,7 +25,7 @@ export default function CreatePost() {
             alert("FILE TYPE NO VALID")
             return;
         }
-        
+
     }
 
     const isImagen = (mimetype) => {
@@ -43,12 +37,12 @@ export default function CreatePost() {
     }
 
     const doPost = () => {
-        let formData = new FormData();
+        const formData = new FormData();
         formData.set('media',postMedia);
         formData.set('title',postText);
         PostService.doPost( formData )
             .then(response => {
-                alert(response)
+                onCreatePost(response);
             })
             .catch(() => {
                 document.getElementById('modal-info').click();

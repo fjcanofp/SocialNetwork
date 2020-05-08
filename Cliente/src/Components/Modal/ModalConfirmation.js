@@ -1,14 +1,8 @@
 import React from "react";
-import AuthService from "../../Services/AuthService";
-import {useHistory} from 'react-router-dom';
 
-export default function ModalConfirmation () {
 
-    const history = useHistory();
-    const handleClick = () => {
-        AuthService.logOut();
-        history.push("/");
-    };
+export default function ModalConfirmation ({handleClick, messageBody}) {
+
 
     return(
         <div className="modal" id="staticBackdrop" data-backdrop="static" tabIndex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -21,14 +15,12 @@ export default function ModalConfirmation () {
                         </button>
                     </div>
                     <div className="modal-body">
-                        You are about to exit BasktBook. Are you sure?
+                        {messageBody}
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-secondary btn-danger" data-dismiss="modal">I'll be around a
-                            little bit more
+                        <button type="button" className="btn btn-primary btn-warning" data-dismiss="modal" onClick={ handleClick }>OK
                         </button>
-                        <button type="button" className="btn btn-primary btn-warning" data-dismiss="modal" onClick={ handleClick }>Exit
-                        </button>
+                        <button type="button" className="btn btn-secondary btn-danger" data-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>

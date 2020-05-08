@@ -11,7 +11,7 @@ import FileService from '../../Services/HttpModule/FileService';
  * 
  * Only is required the postID
  */
-export default function PostsBox({ postID, title, user, post_time, media }) {
+export default function PostsBox({ postID, title, user, post_time, media, onDelete }) {
     const User = AuthService.getUserInfo();
 
     let [filePreview, setFilePreview] = useState("");
@@ -46,7 +46,7 @@ export default function PostsBox({ postID, title, user, post_time, media }) {
     }, [ ])
 
     useEffect(() => {
-        if(!post.media._id){ alert("No yet"); return ;}
+        if(!post.media._id){ return; }
         FileService.getFile(post.media._id)
         .then(file => {
             setFilePreview(file.url)
@@ -57,17 +57,13 @@ export default function PostsBox({ postID, title, user, post_time, media }) {
         })
     }, [ post ])
 
-    const doDeletePost = () => {
-        PostService.delete(post.postID)
-    }
-
     return (
         <div className="container col-7 mb-4">
             <div className="row">
                 <div className="detailBox border col-12">
                     <div className="titleBox">
                         <label>{post.user.name}</label>
-                        {post.user._id === User._id ? <button type="button" className="close" onClick={() => { doDeletePost() }} aria-hidden="true">&times;</button> : <></>}
+                        {post.user._id === User._id ? <button type="button" className="close" onClick={onDelete} aria-hidden="true">&times;</button> : <></>}
                     </div>
                     <div className="commentBox">
                         <div className="row">

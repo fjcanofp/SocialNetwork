@@ -21,7 +21,6 @@ class FileService {
                 if (!response.data) {
                     reject("No data");
                 }
-                console.log(response)
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 resolve({ url: url, type: response.data.type })
             })

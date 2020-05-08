@@ -76,7 +76,7 @@ class PostService {
     }
 
     delete(id){
-        let header  = AuthService.getAuthHeader();
+        const header  = AuthService.getAuthHeader();
         return axios.delete( API_BASE_URL+'/posts/'+id, header)
     }
 }
