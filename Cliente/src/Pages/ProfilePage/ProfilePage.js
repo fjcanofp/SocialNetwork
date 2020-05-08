@@ -6,6 +6,7 @@ import PostsBox from "../../Components/PostsBox/PostsBox";
 import PostService from "../../Services/HttpModule/PostService";
 import UsersService from "../../Services/HttpModule/UsersService";
 import {useParams} from "react-router-dom";
+import  Alert , { AlertTypes }  from '../../Components/Alert/Alert';
 
 export default function ProfilePage() {
 
@@ -23,6 +24,7 @@ export default function ProfilePage() {
         password: '',
         password2: ''
     };
+    const [reqState, setRequestState] = useState( {} );
     const [userEdited, setUserEdited] = useState(User);
 
     const handleInput = (event) => {
@@ -46,7 +48,7 @@ export default function ProfilePage() {
         if (isImagen(evt.target.files[0].type)) {
             setFilePreview(URL.createObjectURL(evt.target.files[0]))
         } else {
-            //Error
+            setRequestState({type : AlertTypes.WARN , messages : 'Invalid avatar format. Please, introduce some of the following: .gif, .png, .jpeg, .bmp, .webp'})
         }
     }
 
@@ -65,13 +67,16 @@ export default function ProfilePage() {
         evt.preventDefault();
 
         if (userEdited.password !== '' && userEdited.password2 === ''){
+            setRequestState({type : AlertTypes.ERROR , messages : 'Repeat your password in the next box, please'})
             return;
         }
         if(userEdited.password2 !== '' && userEdited.password === ''){
+            setRequestState({type : AlertTypes.ERROR , messages : 'Repeat your password in the previous box, please'})
             return;
         }
         if(userEdited.password !== '' && userEdited.password2 !== ''){
-            delete userEdited.password2;
+            if(userEdited.password === userEdited.password2) delete userEdited.password2;
+            else setRequestState({type : AlertTypes.ERROR , messages : 'Passwords do not match'})
         }
 
         userEdited._id = userInfo._id;
@@ -87,19 +92,19 @@ export default function ProfilePage() {
 
     function reset(evt) {
         evt.preventDefault();
+        setRequestState({});
         setUserEdited(User);
     }
 
     return (
         <div className="container-fluid">
             <NavHeader/>
-
             <div className="row ">
                 <div className="col-sm-3 align-items-center">
                     <div className="text-center">
                         <img src={filePreview}
                              className="avatar thumbnail rounded-circle img-thumbnail" alt="avatar"/>
-                        {!samePerson ? <></> : (
+                        {!samePerson ? <h4>{userInfo.name}</h4> : (
                             <>
                                 <h6>Upload a different photo...</h6>
                                 <input type="file" className="text-center center-block file-upload"
@@ -142,6 +147,7 @@ export default function ProfilePage() {
                         </>
                     ) : (
                         <form className="form" onSubmit={editUser} onReset={reset} method="post" id="registrationForm">
+                            <Alert type={ reqState.type } messages={ reqState.messages }/>
                             <div className="form-group">
 
                                 <div className="col-xs-6">
@@ -168,6 +174,7 @@ export default function ProfilePage() {
                                     <label htmlFor="mobile"><h4>Mobile</h4></label>
                                     <input type="tel" className="form-control" name="mobile" id="mobile"
                                            placeholder="666-77-88-99"
+                                           pattern={"[\\d]{3}(-[\\d]{2}){2}-[\\d]{2}"}
                                            value={userEdited.mobile} onChange={handleInput}
                                            title="enter your mobile number if any."/>
                                 </div>
@@ -228,7 +235,7 @@ export default function ProfilePage() {
                                 <div className="col-xs-12">
                                     <br/>
                                     <button className="btn btn-lg btn-warning" type="submit"><i
-                                        className="glyphicon glyphicon-ok-sign"/>Save
+                                        className="glyphicon glyphicon-ok-sign"/> Save
                                     </button>
                                     <button className="btn btn-lg btn-danger ml-3" type="reset"><i
                                         className="glyphicon glyphicon-repeat"/> Reset

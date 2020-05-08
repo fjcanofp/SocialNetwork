@@ -1,0 +1,12 @@
+.link{
+    color: white;
+    font-size: large;
+}
+.link:hover{
+    color: white;
+    text-decoration: none;
+}
+.link:visited{
+    color: white;
+    text-decoration: none;
+}

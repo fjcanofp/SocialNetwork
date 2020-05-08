@@ -1,8 +1,5 @@
 .img-fluid {
-    max-width: 100%;
-    height: auto;
-    max-height: 10rem;
-    min-height: 90%;
+
 }
 .media{
     border: 5px dashed lightgray;
@@ -10,4 +7,19 @@
     padding: 1%;
     display: flex;
     justify-content: center;
+}
+#createPostImage{
+    max-width: 100%;
+    height: auto;
+    max-height: 10rem;
+    min-height: 90%;
+    outline: #aaaaaa dashed;
+    padding: 1%;
+}
+
+#createPostVideo{
+    max-width: 100%;
+    max-height: 12rem;
+    outline: #aaaaaa dashed;
+    padding: 4%;
 }

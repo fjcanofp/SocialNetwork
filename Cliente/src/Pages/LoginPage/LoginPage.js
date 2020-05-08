@@ -18,7 +18,7 @@ export default function Login() {
             password: password
         })
             .then( () => history.push("/home") )
-            .catch(error => setRequestState({type : AlertTypes.ERROR , messages : 'Invalid Credentials'}))
+            .catch(() => setRequestState({type : AlertTypes.ERROR , messages : 'Invalid Credentials'}))
     };
 
     return (

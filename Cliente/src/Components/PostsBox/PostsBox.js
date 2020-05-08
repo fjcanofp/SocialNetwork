@@ -72,18 +72,17 @@ export default function PostsBox({ postID, title, user, post_time, media }) {
                     <div className="commentBox">
                         <div className="row">
                             <div className="col-12">
-
+                                <p className="taskDescription">{post.title}</p>
                                 {isImagen(mimetype) ?
-                                    (<div className="col-4 text-center">
+                                    (<div className="col-sm-12 text-center">
                                         <img src={filePreview} className="img-fluid border" alt="Responsive image" />
                                     </div>) : isVideo(mimetype) ?
-                                        (<div className="col-4 text-center">
+                                        (<div className="col-sm-12 img-fluid text-center">
                                             <video controls>
                                                 <source src={filePreview} type={true} />
                                             </video>
                                         </div>) : (<></>)
                                 }
-                                <p className="taskDescription">{post.title}</p>
                             </div>
                         </div>
                     </div>
