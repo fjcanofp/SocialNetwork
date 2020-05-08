@@ -53,7 +53,7 @@ router.post('/register',  (req, res) => {
 /**
  *  Modify a User
  */
-router.put('/user/:id', (req, res) => {
+router.put('/user/:id', async (req, res) => {
     logger('info', req.id, __filename, 'Start : updating  a user.');
 
     let user = req.body;

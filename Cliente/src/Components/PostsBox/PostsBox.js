@@ -46,7 +46,7 @@ export default function PostsBox({ postID, title, user, post_time, media, onDele
     }, [ ])
 
     useEffect(() => {
-        if(!post.media._id){ return; }
+        if(!post.media || !post.media._id){ return; }
         FileService.getFile(post.media._id)
         .then(file => {
             setFilePreview(file.url)

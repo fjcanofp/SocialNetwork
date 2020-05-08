@@ -98,9 +98,11 @@ router.post('/posts', ( req , res )=>{
         })
     }
     else{
+        delete post.media;
         postsManager.createNewPosts(req.id , post)
         .then((newPost)=>{
             logger('debug',req.id,__filename,"Posts has been created")
+            console.log(newPost)
             return res.status(201).json(newPost);
         })
         .catch( error =>{
