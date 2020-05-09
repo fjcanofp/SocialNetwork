@@ -8,8 +8,8 @@ import PostService from '../../Services/HttpModule/PostService';
 
 export default function Home() {
 
-    let [user, setUser] = useState({});
-    let [posts, setPosts] = useState([]);
+    const [user, setUser] = useState({});
+    const [posts, setPosts] = useState([]);
 
     const doDeletePost = (id) => {
         PostService.delete(id)
@@ -22,7 +22,6 @@ export default function Home() {
     const doCreatePost = (post) => {
         const postArr = [...posts].concat(post);
         postArr.sort((a, b) => {
-            console.log(new Date(a.post_time), new Date(b.post_time))
             if (new Date(a.post_time) < new Date(b.post_time)) {
                 return 1;
             } else return -1;

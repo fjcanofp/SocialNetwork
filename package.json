@@ -21,6 +21,7 @@
   "dependencies": {
     "bootstrap": "^4.4.1",
     "concurrently": "^5.2.0",
-    "react-bootstrap": "^1.0.1"
+    "react-bootstrap": "^1.0.1",
+    "react-router": "^5.1.2"
   }
 }

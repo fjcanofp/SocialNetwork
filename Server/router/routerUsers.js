@@ -219,6 +219,10 @@ router.put('/recovery', (req, res)=>{
     })
 })
 
+
+/**
+ * Find a user by name, last name or email,
+ */
 router.get('/users/regex/:regex',(req , res)=>{
     let regex = req.params.regex;
 

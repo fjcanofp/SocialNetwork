@@ -9,25 +9,42 @@ import {useParams} from "react-router-dom";
 import Alert, {AlertTypes} from '../../Components/Alert/Alert';
 import ModalInformation from "../../Components/Modal/ModalInformation";
 import ModalConfirmation from "../../Components/Modal/ModalConfirmation";
+import {useLocation} from "react-router";
 
 export default function ProfilePage() {
 
-    const {id} = useParams();
-    const userInfo = AuthService.getUserInfo();
-    const samePerson = userInfo._id === id;
+    const [user, setUser] = useState({});
 
-    const User = {
-        name: userInfo.name || '',
-        lastName: userInfo.lastName || '',
-        mobile: userInfo.mobile || '',
-        birthday: userInfo.birthday || '',
-        email: userInfo.login || '',
-        location: userInfo.location || '',
+    useEffect(() => {
+        UsersService.getUserbyId(id)
+            .then(user => setUser(user))
+            .catch(error => console.log(error))
+
+    }, []);
+
+    const location = useLocation();
+    useEffect(() => {
+        const currentPath = location.pathname;
+        const searchParams = new URLSearchParams(location.search);
+    }, [location]);
+
+
+    const {id} = useParams();
+    const userSession = AuthService.getUserInfo();
+    const samePerson = userSession._id === user._id;
+
+    const userToModify = {
+        name: userSession.name || '',
+        lastName: userSession.lastName || '',
+        mobile: userSession.mobile || '',
+        birthday: userSession.birthday || '',
+        email: userSession.login || '',
+        location: userSession.location || '',
         password: '',
         password2: ''
     };
     const [reqState, setRequestState] = useState({});
-    const [userEdited, setUserEdited] = useState(User);
+    const [userEdited, setUserEdited] = useState(userToModify);
 
     const handleInput = (event) => {
         setUserEdited({
@@ -36,7 +53,7 @@ export default function ProfilePage() {
         });
     }
 
-    const [filePreview, setFilePreview] = useState(userInfo.avatar ? userInfo.avatar : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
+    const [filePreview, setFilePreview] = useState(userSession.avatar ? userSession.avatar : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
 
     const isImagen = (mimetype) => {
         return ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp'].includes(mimetype);
@@ -72,8 +89,7 @@ export default function ProfilePage() {
     function editUser(evt) {
         evt.preventDefault();
 
-
-        if (userEdited.password === '' && userEdited.password2 === ''){
+        if (userEdited.password === '' && userEdited.password2 === '') {
             setRequestState({});
             delete userEdited.password;
             delete userEdited.password2;
@@ -90,13 +106,13 @@ export default function ProfilePage() {
             if (userEdited.password === userEdited.password2) {
                 delete userEdited.password2;
                 setRequestState({});
-            } else{
+            } else {
                 setRequestState({type: AlertTypes.ERROR, messages: 'Passwords do not match'});
                 return;
             }
         }
 
-        userEdited._id = userInfo._id;
+        userEdited._id = userSession._id;
         userEdited.avatar = filePreview;
         document.getElementById('modalProfile').click();
     }
@@ -104,7 +120,7 @@ export default function ProfilePage() {
     function reset(evt) {
         evt.preventDefault();
         setRequestState({});
-        setUserEdited(User);
+        setUserEdited(userToModify);
     }
 
     function handleModalProfile() {
@@ -130,7 +146,7 @@ export default function ProfilePage() {
                         <div className="text-center">
                             <img src={filePreview}
                                  className="avatar thumbnail rounded-circle img-thumbnail" alt="avatar"/>
-                            {!samePerson ? <h4>{userInfo.name}</h4> : (
+                            {!samePerson ? <h4>{user.name}</h4> : (
                                 <>
                                     <h6>Upload a different photo...</h6>
                                     <input type="file" className="text-center center-block file-upload"
@@ -146,7 +162,7 @@ export default function ProfilePage() {
                             </li>
                             <li className="list-group-item list-group-item-action text-right"><span
                                 className="pull-left"><strong>Posts</strong></span>
-                                <span className="badge badge-primary badge-pill">125</span>
+                                <span className="badge badge-primary badge-pill">{posts.length}</span>
                             </li>
                             <li className="list-group-item list-group-item-action text-right"><span
                                 className="pull-left"><strong>Shares</strong></span>
@@ -158,7 +174,7 @@ export default function ProfilePage() {
                             </li>
                             <li className="list-group-item text-right"><span
                                 className="pull-left"><strong>Friends</strong></span>
-                                <span className="badge badge-primary badge-pill">74</span>
+                                <span className="badge badge-primary badge-pill">1</span>
                             </li>
                         </ul>
                     </div>

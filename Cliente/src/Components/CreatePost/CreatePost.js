@@ -42,6 +42,9 @@ export default function CreatePost( {onCreatePost}) {
         formData.set('title',postText);
         PostService.doPost( formData )
             .then(response => {
+                setPostText("");
+                setPostMedia("");
+                setFilePreview("");
                 onCreatePost(response);
             })
             .catch(() => {

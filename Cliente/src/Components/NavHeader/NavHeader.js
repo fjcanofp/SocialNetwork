@@ -1,19 +1,29 @@
 import {Link, useHistory} from "react-router-dom";
 import logOut from "../../Resources/img/log-out.svg";
-import React from "react";
+import React, {useState} from "react";
 import AuthService from "../../Services/AuthService";
 import ModalConfirmation from "../Modal/ModalConfirmation";
 import './NavHeader.css';
+import UsersService from "../../Services/HttpModule/UsersService";
+
 
 export default function NavHeader() {
 
     const User = AuthService.getUserInfo();
     const avatar = 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
     const history = useHistory();
+    const [search, setSearch] = useState("");
 
     function handleModalNav () {
         AuthService.logOut();
         history.push("/");
+    }
+    function findUser(evt){
+        evt.preventDefault();
+
+        UsersService.findUserRegex(search)
+            .then( user => history.push(`/profile/${user[0]._id}`))
+            .catch( error =>console.log(error))
     }
 
     return (
@@ -35,9 +45,11 @@ export default function NavHeader() {
                     </div>
                     <div className="col-sm-5 offset-sm-3">
                         <form className="float-right form-inline ">
-                            <input className="form-control mr-sm-2" type="search" placeholder="Search"
+                            <input className="form-control mr-sm-2" type="text" placeholder="Search"
+                                   value={search} onChange={(evt) => setSearch(evt.target.value)}
                                    aria-label="Search"/>
-                            <button className="btn btn-outline-warning my-2 my-sm-0" type="submit">Search</button>
+                            <button className="btn btn-outline-warning my-2 my-sm-0" type="submit"
+                            onClick={(evt) =>findUser(evt)}>Search</button>
                         </form>
                     </div>
                     <img id="log-out" src={logOut} className="col-1" alt="" data-toggle="modal"
