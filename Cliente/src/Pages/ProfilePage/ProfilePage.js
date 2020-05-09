@@ -10,14 +10,23 @@ import Alert, {AlertTypes} from '../../Components/Alert/Alert';
 import ModalInformation from "../../Components/Modal/ModalInformation";
 import ModalConfirmation from "../../Components/Modal/ModalConfirmation";
 import {useLocation} from "react-router";
+import FileService from '../../Services/HttpModule/FileService';
 
 export default function ProfilePage() {
 
     const [user, setUser] = useState({});
-
+    const [userAvatar , setUserAvatar] = useState();
     useEffect(() => {
         UsersService.getUserbyId(id)
-            .then(user => setUser(user))
+            .then(user =>{
+                setUser(user)
+                console.log(user)
+                return FileService.getFile(user.avatar._id)
+            })
+            .then(file=>{
+                setFilePreview(file.url)
+                setUserAvatar(file)
+            })
             .catch(error => console.log(error))
 
     }, []);
@@ -53,7 +62,7 @@ export default function ProfilePage() {
         });
     }
 
-    const [filePreview, setFilePreview] = useState(userSession.avatar ? userSession.avatar : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
+    const [filePreview, setFilePreview] = useState("http://ssl.gstatic.com/accounts/ui/avatar_2x.png");
 
     const isImagen = (mimetype) => {
         return ['image/gif', 'image/png', 'image/jpeg', 'image/bmp', 'image/webp'].includes(mimetype);
@@ -64,6 +73,7 @@ export default function ProfilePage() {
             return
         }
         if (isImagen(evt.target.files[0].type)) {
+            setUserAvatar(evt.target.files[0])
             setFilePreview(URL.createObjectURL(evt.target.files[0]))
             setRequestState({});
         } else {
@@ -124,7 +134,14 @@ export default function ProfilePage() {
     }
 
     function handleModalProfile() {
-        UsersService.modifyUser(userEdited)
+        const formData = new FormData();
+        delete userEdited.avatar;
+        formData.set('media', userAvatar );
+        formData.set('user', JSON.stringify(userEdited) );
+        if(userEdited.avatar == "http://ssl.gstatic.com/accounts/ui/avatar_2x.png"){
+            delete userEdited.avatar;
+        }
+        UsersService.modifyUser(formData , AuthService.getUserInfo()._id)
             .then((userModified) => {
                 AuthService.loginManager(userModified);
             })

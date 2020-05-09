@@ -55,11 +55,18 @@ router.post('/register',  (req, res) => {
  */
 router.put('/user/:id', async (req, res) => {
     logger('info', req.id, __filename, 'Start : updating  a user.');
-
-    let user = req.body;
+    let files = null;
+    let user = JSON.parse(req.body.user);
     let id = req.params.id;
     user._id = id;
-    let files = req.files[0];
+    console.log(user)
+    if(!id){
+        return res.status(401).json({ code: '400', message: 'Bad Request' })
+    }
+
+    if(req.files){
+         files = req.files[0];
+    }
 
     if (id != req.user._id) {
         logger('warn', req.id, __filename, '401 unauthorized');
@@ -67,41 +74,53 @@ router.put('/user/:id', async (req, res) => {
     }
 
     if(user.password){
-        const isPasswordChanged = user === null
-            ? false
-            : await bcrypt.compare(body.password, req.user.password);
-    
-        if(isPasswordChanged){
+        const isPasswordChanged = await bcrypt.compare(user.password, req.user.password);
+        
+        console.log(!isPasswordChanged)
+        if(!isPasswordChanged){
             const salt = bcrypt.genSaltSync(10);
             const hash = bcrypt.hashSync(user.password, salt);
             user.password = hash;
         }
     }
 
-
-    if(file){
+    if(files){
         FileService.uploadFile(files)
         .then( file =>{
             logger('debug', req.id, __filename, 'Profile photo uploaded');
             user.avatar = file;
+            userManager.modifyUser(req.id , user)
         })
+            .then((user) => {
+                logger('info', req.id, __filename, 'user has been modified with id '+id);
+                return res.status(200).json({ code: 200, message: 'Ok ' });
+            })
+            .catch(error => {
+                logger('error', req.id, __filename, 'error updating user :' + error);
+                return res.status(error.code).end(error.messages);
+            })
+            .finally(() => {
+                logger('info', req.id, __filename, 'End : updating  a user.');
+            })
         .catch(error=>{
             logger('error', req.id, __filename, error);
         })
     }
+    else{
 
-    userManager.modifyUser(req.id , user)
-        .then((user) => {
-            logger('info', req.id, __filename, 'user has been modified with id '+id);
-            return res.status(200).json({ code: 200, message: 'Ok ' });
-        })
-        .catch(error => {
-            logger('error', req.id, __filename, 'error updating user :' + error);
-            return res.status(error.code).end(error.messages);
-        })
-        .finally(() => {
-            logger('info', req.id, __filename, 'End : updating  a user.');
-        })
+        userManager.modifyUser(req.id , user)
+            .then((user) => {
+                logger('info', req.id, __filename, 'user has been modified with id '+id);
+                return res.status(200).json({ code: 200, message: 'Ok ' });
+            })
+            .catch(error => {
+                logger('error', req.id, __filename, 'error updating user :' + error);
+                return res.status(error.code).end(error.messages);
+            })
+            .finally(() => {
+                logger('info', req.id, __filename, 'End : updating  a user.');
+            })
+    }
 })
 
 /**

@@ -13,6 +13,9 @@ router.use(middleware.indentifyRequest);
 router.use(middleware.interceptorLog);
 router.use(middleware.interceptorCORS);
 router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: false }));
+// in latest body-parser use like below.
+router.use(bodyParser.urlencoded({ extended: true }));
 router.use(upload.any())
 //Security 
 router.use(security.interceptorJWT);

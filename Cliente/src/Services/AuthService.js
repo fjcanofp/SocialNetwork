@@ -55,7 +55,7 @@ class AuthService {
     }
 
     getAuthHeader() {
-       return { "headers": {"Authorization": 'Bearer ' + JSON.parse(sessionStorage.getItem(SESSION_ID)).token , 'Content-Type': 'multipart/form-data'}};
+       return { "headers": {"Authorization": 'Bearer ' + JSON.parse(sessionStorage.getItem(SESSION_ID)).token , 'Content-Type': 'application/x-www-form-urlencoded'}};
     }
 
     logOut() {

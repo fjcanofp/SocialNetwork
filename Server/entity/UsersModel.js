@@ -14,7 +14,7 @@ const schemaUsers = mongoose.Schema({
     },
     name: String,
     lastName: String,
-    mobile: Number,
+    mobile: String,
     birthday: Date,
     location: String,
     avatar :{

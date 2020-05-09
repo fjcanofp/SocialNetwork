@@ -77,11 +77,13 @@ exports.deleteUser = function ( ctx , id) {
 };
 
 exports.modifyUser = function (ctx , user) {
+    console.log(user)
     logger('debug',ctx,__filename, "Updating user")
     return new Promise((resolve, reject) => {
-        userModel.updateOne({_id: user._id}, user)
+        userModel.update({ _id: user._id},user)
             .then((userModified) => {
-                logger('info', ctx , __filename, `User with the id: ${userModified._id} has been modified`);
+                console.log(userModified)
+                logger('info', ctx , __filename, `User with the has been modified`);
                 resolve(userModified);
             })
             .catch(error => {
