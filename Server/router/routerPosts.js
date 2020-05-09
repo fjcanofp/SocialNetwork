@@ -72,10 +72,8 @@ router.get('/user/:id/posts',(req ,res)=>{
 router.post('/posts', ( req , res )=>{
     logger('info',req.id,__filename,"Start: Creating post")
     let user = req.user;
-    let post = req.body.user;
+    let post = req.body;
     let files = req.files[0];
-
-    console.log(user , files)
     if(!user || !post){
         return res.status(400).end("Bad Request")
     }

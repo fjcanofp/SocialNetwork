@@ -128,7 +128,7 @@ exports.modifyPosts = function (ctx , posts) {
 
 exports.deletePosts = function (ctx , id) {
     return new Promise((resolve, reject) => {
-        logger('debug', ctx, __filename, 'Deleting new post');
+        logger('debug', ctx, __filename, 'Deleting new post '+ id );
         if (!id) {
             logger('debug', ctx, __filename, 'post cannot be null');
             reject({
@@ -137,9 +137,11 @@ exports.deletePosts = function (ctx , id) {
             })
         }
 
-        PostsModel.findByIdAndDelete({_id: id})
+        PostsModel.findByIdAndDelete({ _id : id })
             .then((post) => {
-                return FileService.deleteFile(post.media)
+                if(post.media){
+                    return FileService.deleteFile(post.media)
+                }
             })
             .then(()=>{
                 logger('info', ctx, __filename, 'New post has been deleted id:' + id);
