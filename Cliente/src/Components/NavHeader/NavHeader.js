@@ -10,7 +10,7 @@ import UsersService from "../../Services/HttpModule/UsersService";
 export default function NavHeader() {
 
     const User = AuthService.getUserInfo();
-    const avatar = 'http://ssl.gstatic.com/accounts/ui/avatar_2x.png';
+    const avatar = !User.pic ?'http://ssl.gstatic.com/accounts/ui/avatar_2x.png':User.pic.url;
     const history = useHistory();
     const [search, setSearch] = useState("");
 
@@ -25,7 +25,7 @@ export default function NavHeader() {
             .then( user => history.push(`/profile/${user[0]._id}`))
             .catch( error =>console.log(error))
     }
-
+    console.log(User)
     return (
         <>
             <ModalConfirmation

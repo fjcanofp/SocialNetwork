@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import FileService from './HttpModule/FileService'
 const USER_API_BASE_URL = 'http://localhost:8080';
 const SESSION_ID = 'NBA_USER_SECCION';
 
@@ -13,6 +13,17 @@ class AuthService {
                     user : response.data.user ,
                     token : response.data.token
                  });
+                 if(response.data.user.avatar){
+                     FileService.getFile(response.data.user.avatar)
+                     .then( file => { 
+                         response.data.user.pic = file;
+                         this.setUserInfo({
+                            user : response.data.user ,
+                            token : response.data.token
+                         });
+                     })
+                     .catch(error=>{ console.log(error)})
+                 }
                 resolve(response)
             })
             .catch(( error )=>{
